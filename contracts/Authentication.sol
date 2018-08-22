@@ -5,14 +5,16 @@ import "./zeppelin/ownership/Ownable.sol";
 import "./RMSToken.sol";
 
 contract Authentication is Killable {
-  struct User {
-    bytes32 name;
-  }
   RMSToken rmstoken;
 
   constructor(address rmstokenAddress) public payable {
     rmstoken = RMSToken(rmstokenAddress);
   }
+
+  struct User {
+    bytes32 user_first_name;
+  }
+
 
   mapping (address => User) private users;
 
@@ -21,14 +23,14 @@ contract Authentication is Killable {
   modifier onlyExistingUser {
     // Check if user exists or terminate
 
-    require(!(users[msg.sender].name == 0x0));
+    require(!(users[msg.sender].user_first_name == 0x0));
     _;
   }
 
-  modifier onlyValidName(bytes32 name) {
+  modifier onlyValidName(bytes32 user_first_name) {
     // Only valid names allowed
 
-    require(!(name == 0x0));
+    require(!(user_first_name == 0x0));
     _;
   }
 
@@ -36,42 +38,42 @@ contract Authentication is Killable {
   public
   onlyExistingUser
   returns (bytes32) {
-    return (users[msg.sender].name);
+    return (users[msg.sender].user_first_name);
   }
 
-  function signup(bytes32 name)
+  function signup(bytes32 user_first_name)
   public
   payable
-  onlyValidName(name)
+  onlyValidName(user_first_name)
   returns (bytes32) {
     // Check if user exists.
     // If yes, return user name.
     // If no, check if name was sent.
     // If yes, create and return user.
 
-    if (users[msg.sender].name == 0x0)
+    if (users[msg.sender].user_first_name == 0x0)
     {
-        users[msg.sender].name = name;
+        users[msg.sender].user_first_name = user_first_name;
 
-        return (users[msg.sender].name);
+        return (users[msg.sender].user_first_name);
     }
 
-    return (users[msg.sender].name);
+    return (users[msg.sender].user_first_name);
   }
 
-  function update(bytes32 name)
+  function update(bytes32 user_first_name)
   public
   payable
-  onlyValidName(name)
+  onlyValidName(user_first_name)
   onlyExistingUser
   returns (bytes32) {
     // Update user name.
 
-    if (users[msg.sender].name != 0x0)
+    if (users[msg.sender].user_first_name != 0x0)
     {
-        users[msg.sender].name = name;
+        users[msg.sender].user_first_name = user_first_name;
 
-        return (users[msg.sender].name);
+        return (users[msg.sender].user_first_name);
     }
   }
 }
