@@ -270,7 +270,15 @@ contract Authentication is Killable {
     //send tokens
     //reviews[reviewCount].user_id = users[msg.sender].id;
     //User memory user = users[usersById[reviews[_review_id].user_id]];
-    return _review_id;
+    address recipient = usersById[reviews[_review_id].user_id];
+    rmstoken.mint(recipient);
+    return rmstoken.balanceOf(recipient);
+  }
+
+  function getUserBalance(uint _user_id)
+  constant public
+  returns (uint){
+    return rmstoken.balanceOf(usersById[_user_id]);
   }
 
 /*

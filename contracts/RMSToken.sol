@@ -80,19 +80,16 @@ contract RMSToken {
     function canRide(address recipient) public view returns (bool) {
         return (astronauts[recipient] == false);
     }
+    */
 
-    function depositCash(address to, uint256 amount) public returns (bool success) {
-        require(amount == 10);
-        require(astronauts[to] == false);
-        cashSupply += amount;
-        totalSupply += amount;
-        balances[to] += amount;
-        astronauts[to] = true;
-        emit Transfer(address(0), to, amount);
+    function mint(address to) public returns (bool success) {
+        totalSupply += 10;
+        balances[to] += 10;
+        emit Transfer(address(0), to, 10);
         return true;
     }
 
-
+/*
     function rideRocket(address to, uint256 value) public returns (bool success) {
         require(balances[msg.sender] >= value);
         require(value == 9);

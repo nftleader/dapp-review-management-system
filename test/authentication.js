@@ -200,6 +200,8 @@ contract('Authentication', async function(accounts) {
       await authentication.approveReview(reviewIndexes[i], {from:accounts[accountIndexes[i]]});
       let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(reviewIndexes[i]);
       display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+      let userbalance = (await authentication.getUserBalance(user_id)).toNumber();
+      console.error("balance : " + userbalance + " RMST");
     }
   });
 });
