@@ -86,6 +86,9 @@ contract Authentication is Killable {
     _;
   }
 
+  modifier onlyMyReview(uint revid){ require(users[msg.sender].id == reviews[revid].company_id, "not my review"); _; }
+  modifier onlyPendingReview(uint revid){ require(reviews[revid].review_status == ReviewStatus.Pending, "only pending review"); _; }
+
   event LogUserSignUp(address from);
   event LogCompanySignUp(address from);
 
@@ -252,7 +255,7 @@ contract Authentication is Killable {
 
   function replyReview(uint _review_id, string _reply)
   payable public
-  onlyCompany onlyExistingReviewID(_review_id)
+  onlyCompany onlyExistingReviewID(_review_id) onlyMyReview(_review_id) onlyPendingReview(_review_id)
   returns(uint){
     reviews[_review_id].review_status = ReviewStatus.Negative;
     reviews[_review_id].reply = (_reply);
@@ -261,7 +264,7 @@ contract Authentication is Killable {
 
   function approveReview(uint _review_id)
   payable public
-  onlyCompany onlyExistingReviewID(_review_id)
+  onlyCompany onlyExistingReviewID(_review_id) onlyMyReview(_review_id) onlyPendingReview(_review_id)
   returns(uint){
     reviews[_review_id].review_status = ReviewStatus.Positive;
     //send tokens

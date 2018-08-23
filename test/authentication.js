@@ -173,5 +173,24 @@ contract('Authentication', async function(accounts) {
       display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
     }
     assert.equal(reviewCount, 5, "review count is wrong.");
+
+    //7 reply reviews
+    console.log("\n\nReply to Reviews 1, 3, 5: ")
+    await authentication.replyReview(1, "This is reply", {from:accounts[3]});
+    await authentication.replyReview(3, "Bad Review", {from:accounts[4]});
+    await authentication.replyReview(5, "Worst Review! This guy is mad!", {from:accounts[4]});
+    {
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(1);
+      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+    }
+    {
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(3);
+      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+    }
+    {
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(5);
+      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+    }
+    
   });
 });
