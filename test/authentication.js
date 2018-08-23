@@ -7,35 +7,35 @@ const REVIEW_STATUS = ["Pending", "Positive", "Negative"];
 function display_user_data(id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address){
 /*  console.log("**** id: ", id.toNumber());
     console.log("**** userType: ", userType.toNumber());
-    console.log("**** email: ", web3.toUtf8(email));
-    console.log("**** user_first_name: ", web3.toUtf8(user_first_name));
-    console.log("**** user_second_name: ", web3.toUtf8(user_second_name));
-    console.log("**** user_zipcode: ", web3.toUtf8(user_zipcode));
-    console.log("**** company_name: ", web3.toUtf8(company_name));
-    console.log("**** company_address: ", web3.toUtf8(company_address));
+    console.log("**** email: ", email);
+    console.log("**** user_first_name: ", user_first_name);
+    console.log("**** user_second_name: ", user_second_name);
+    console.log("**** user_zipcode: ", user_zipcode);
+    console.log("**** company_name: ", company_name);
+    console.log("**** company_address: ", company_address);
 */
     console.log("**** id: ", id.toNumber(),
                 "userType: ", USER_TYPES[userType.toNumber()],
-                "email: ", web3.toUtf8(email),
-                "user_first_name: ", web3.toUtf8(user_first_name),
-                "user_second_name: ", web3.toUtf8(user_second_name),
-                "user_zipcode: ", web3.toUtf8(user_zipcode),
-                "company_name: ", web3.toUtf8(company_name),
-                "company_address: ", web3.toUtf8(company_address));
+                "email: ", email,
+                "user_first_name: ", user_first_name,
+                "user_second_name: ", user_second_name,
+                "user_zipcode: ", user_zipcode,
+                "company_name: ", company_name,
+                "company_address: ", company_address);
 }
 
 function display_product_data(product_id, company_id, product_name){
-  console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", web3.toUtf8(product_name));
+  console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", product_name);
 }
 
 function display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply){
   console.log("#### review_id: ", review_id.toNumber(),
               "user_id: ", user_id.toNumber(),
               "product_id: ", product_id.toNumber(),
-              "review: ", web3.toUtf8(review),
+              "review: ", review,
               "is_spam: ", is_spam ? "YES" : "NO",
               "review_status: ", REVIEW_STATUS[review_status.toNumber()],
-              "reply: ", web3.toUtf8(reply));
+              "reply: ", reply);
 }
 
 
@@ -60,10 +60,11 @@ contract('Authentication', async function(accounts) {
 
     await authentication.signupUser(expectedEmail, expectedFirstName, expectedSecondName, expectedZipCode, {from: accounts[0]});
     let [id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address] = await authentication.login.call({from: accounts[0]});
-      
+    display_user_data(id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address);
     assert.equal(userType.toNumber(), 0, "The user is company.");
-    assert.equal(web3.toUtf8(email), expectedEmail, "email is wrong.");
-    assert.equal(web3.toUtf8(user_zipcode), expectedZipCode, "zipcode is wrong.");
+    assert.equal(email, expectedEmail, "email is wrong.");
+    assert.equal(user_zipcode, expectedZipCode, "zipcode is wrong.");
+    return;
   });
 
   
@@ -76,8 +77,8 @@ contract('Authentication', async function(accounts) {
     let [id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address] = await authentication.login.call({from: accounts[0]});
 
     assert.equal(userType.toNumber(), 1, "The user is company.");
-    assert.equal(web3.toUtf8(email), expectedEmail, "email is wrong.");
-    assert.equal(web3.toUtf8(company_address), expectedAddress, "company address is wrong.");
+    assert.equal(email, expectedEmail, "email is wrong.");
+    assert.equal(company_address, expectedAddress, "company address is wrong.");
   });
 
 
@@ -94,15 +95,15 @@ contract('Authentication', async function(accounts) {
     display_user_data(id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address);
 
     assert.equal(userType.toNumber(), 1, "The user is User.");
-    assert.equal(web3.toUtf8(email), 'company@company.com', "email is wrong.");
-    assert.equal(web3.toUtf8(company_address), 'vladivostok russia', "company address is wrong.");
+    assert.equal(email, 'company@company.com', "email is wrong.");
+    assert.equal(company_address, 'vladivostok russia', "company address is wrong.");
 
     //3 display
     let totalCount = (await authentication.totalCount.call()).toNumber();
     console.log("Total Count : ", totalCount);
     for(let i = 1; i <= totalCount; i++){
       let [id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address] = await authentication.getUser.call(i);
-      console.log("^^^^ id: ", id.toNumber(), " userType: ", USER_TYPES[userType.toNumber()], " email: ", web3.toUtf8(email));
+      console.log("^^^^ id: ", id.toNumber(), " userType: ", USER_TYPES[userType.toNumber()], " email: ", email);
     }
 
     assert.equal(totalCount, 5, "total count is wrong.");
@@ -145,21 +146,21 @@ contract('Authentication', async function(accounts) {
     await authentication.createReview(
       5,
       2,
-      "This is FIFTH product!\n\nIt's the worst!\n",
+      "This is FIFTH product!\tIt's the worst!\n",
       true,
       {from: accounts[1]}
     );
     await authentication.createReview(
       5,
       5,
-      "This is FIFTH product!\n\nIt's the best!\n",
+      "This is FIFTH product!\tIt's the best!\n",
       false,
       {from: accounts[0]}
     );
     await authentication.createReview(
       6,
       1,
-      "This is SIXTH product!\n\nIt's the worst product I've ever seen!!!\n",
+      "This is SIXTH product!\tIt's the worst product I've ever seen!!!\n",
       true,
       {from: accounts[1]}
     );

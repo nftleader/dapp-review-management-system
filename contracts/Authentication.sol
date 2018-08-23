@@ -18,13 +18,13 @@ contract Authentication is Killable {
     uint id;
     UserType userType;
 
-    bytes32 email;
-    bytes32 user_first_name;
-    bytes32 user_second_name;
-    bytes32 user_zipcode;
+    string email;
+    string user_first_name;
+    string user_second_name;
+    string user_zipcode;
 
-    bytes32 company_name;
-    bytes32 company_address;
+    string company_name;
+    string company_address;
 
     address eth_address;
   }
@@ -32,7 +32,7 @@ contract Authentication is Killable {
   struct Product{
     uint id;
     uint company_id;
-    bytes32 product_name;
+    string product_name;
   }
 
   struct Review{
@@ -41,10 +41,10 @@ contract Authentication is Killable {
     uint product_id;
     uint company_id;
     uint rating;
-    bytes32 review;
+    string review;
     bool is_spam;
     ReviewStatus review_status;
-    bytes32 reply;
+    string reply;
   }
 
   //users
@@ -86,27 +86,24 @@ contract Authentication is Killable {
     _;
   }
 
-  modifier onlyValidName(bytes32 user_first_name) {require(!(user_first_name == 0x0), "invalid name");_;}
-  modifier onlyValidEmail(bytes32 email) { require(!(email == 0x0), "Invalid email"); _; }
-
   event LogUserSignUp(address from);
   event LogCompanySignUp(address from);
 
-  event LogBytes32(bytes32 data);
-  event LogString(string);
+  event LogBytes32(string data);
+  event LogString(string str);
   event LogNumber(uint num);
 
   function login()
-  public constant onlyExistingUser
-  returns (uint, UserType, bytes32, bytes32, bytes32, bytes32,  bytes32, bytes32) {
-    // emit LogString("-------  Login");
-    // emit LogNumber(users[msg.sender].id);
-    // emit LogBytes32(users[msg.sender].email);
-    // emit LogBytes32(users[msg.sender].user_first_name);
-    // emit LogBytes32(users[msg.sender].user_second_name);
-    // emit LogBytes32(users[msg.sender].user_zipcode);
-    // emit LogBytes32(users[msg.sender].company_name);
-    // emit LogBytes32(users[msg.sender].company_address);
+  public /*constant*/payable onlyExistingUser
+  returns (uint, UserType, string, string, string, string,  string, string) {
+    emit LogString("-------  Login");
+    emit LogNumber(users[msg.sender].id);
+    emit LogString(users[msg.sender].email);
+    emit LogString(users[msg.sender].user_first_name);
+    emit LogString(users[msg.sender].user_second_name);
+    emit LogString(users[msg.sender].user_zipcode);
+    emit LogString(users[msg.sender].company_name);
+    emit LogString(users[msg.sender].company_address);
     return (users[msg.sender].id, 
             users[msg.sender].userType,
             users[msg.sender].email,
@@ -119,7 +116,7 @@ contract Authentication is Killable {
 
   function getUser(uint index)
   public constant onlyExistingUserID(index)
-  returns (uint, UserType, bytes32, bytes32, bytes32, bytes32,  bytes32, bytes32) {
+  returns (uint, UserType, string, string, string, string,  string, string) {
     User memory user = users[usersById[index]];
     return (user.id, 
             user.userType,
@@ -131,9 +128,9 @@ contract Authentication is Killable {
             user.company_address);
   }
 
-  /** @dev convert strint to bytes32
+  /** @dev convert strint to string
      */
-  function stringToBytes32(string memory source) internal pure returns (bytes32 result) {
+  function stringToString(string memory source) internal pure returns (bytes32 result) {
       bytes memory tempEmptyStringTest = bytes(source);
       if (tempEmptyStringTest.length == 0) {
           return 0x0;
@@ -153,10 +150,10 @@ contract Authentication is Killable {
   onlyNONExistingUser
   external  payable  returns (uint) {
     User memory newbie;
-    newbie.email              = stringToBytes32(_email);
-    newbie.user_first_name    = stringToBytes32(_user_first_name);
-    newbie.user_second_name   = stringToBytes32(_user_second_name);
-    newbie.user_zipcode       = stringToBytes32(_user_zipcode);
+    newbie.email              = _email;
+    newbie.user_first_name    = _user_first_name;
+    newbie.user_second_name   = _user_second_name;
+    newbie.user_zipcode       = _user_zipcode;
     userCount++;
     totalCount++;
     newbie.id = totalCount;
@@ -166,6 +163,8 @@ contract Authentication is Killable {
     usersById[totalCount] = msg.sender;
     users[msg.sender] = newbie;
     emit LogUserSignUp(msg.sender);
+    emit LogString(newbie.email);
+    emit LogString(_email);
     emit LogNumber(totalCount);
     return totalCount; //return userid
   }
@@ -179,9 +178,9 @@ contract Authentication is Killable {
   onlyNONExistingUser
   external  payable  returns (uint) {
     User memory newbie;
-    newbie.email              = stringToBytes32(_email);
-    newbie.company_name    = stringToBytes32(_company_name);
-    newbie.company_address       = stringToBytes32(_company_address);
+    newbie.email              = (_email);
+    newbie.company_name    = (_company_name);
+    newbie.company_address       = (_company_address);
     companyCount++;
     totalCount++;
     newbie.id = totalCount;
@@ -199,7 +198,7 @@ contract Authentication is Killable {
   payable public onlyCompany
   returns(uint){
     productCount++;
-    products[productCount].product_name = stringToBytes32(_product_name);
+    products[productCount].product_name = (_product_name);
     products[productCount].id = productCount;
     products[productCount].company_id = users[msg.sender].id;
     return productCount;
@@ -208,7 +207,7 @@ contract Authentication is Killable {
 
   function getProduct(uint index)
   constant public onlyExistingProductID(index)
-  returns(uint, uint, bytes32){
+  returns(uint, uint, string){
     return(
       products[index].id,
       products[index].company_id,
@@ -227,7 +226,7 @@ contract Authentication is Killable {
     reviews[reviewCount].product_id = _prod_id;
     reviews[reviewCount].company_id = products[_prod_id].company_id;
     reviews[reviewCount].rating = _rating;
-    reviews[reviewCount].review = stringToBytes32(_review);
+    reviews[reviewCount].review = (_review);
     reviews[reviewCount].is_spam = _isSpam;
     reviews[reviewCount].review_status = ReviewStatus.Pending;
     return reviewCount;
@@ -236,7 +235,7 @@ contract Authentication is Killable {
   function getReview(uint _review_id)
   constant public
   onlyExistingReviewID(_review_id)
-  returns(uint, uint, uint, uint, uint, bytes32, bool, ReviewStatus, bytes32){
+  returns(uint, uint, uint, uint, uint, string, bool, ReviewStatus, string){
     Review memory review = reviews[_review_id];
     return (
       review.id,
@@ -256,7 +255,7 @@ contract Authentication is Killable {
   onlyCompany onlyExistingReviewID(_review_id)
   returns(uint){
     reviews[_review_id].review_status = ReviewStatus.Negative;
-    reviews[_review_id].reply = stringToBytes32(_reply);
+    reviews[_review_id].reply = (_reply);
     return _review_id;
   }
 
@@ -271,13 +270,13 @@ contract Authentication is Killable {
     return _review_id;
   }
 
-
-  function update(bytes32 user_first_name)
+/*
+  function update(string user_first_name)
   public
   payable
   onlyValidName(user_first_name)
   onlyExistingUser
-  returns (bytes32) {
+  returns (string) {
     // Update user name.
 
     if (users[msg.sender].user_first_name != 0x0)
@@ -287,4 +286,5 @@ contract Authentication is Killable {
         return (users[msg.sender].user_first_name);
     }
   }
+*/
 }
