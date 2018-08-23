@@ -28,6 +28,17 @@ function display_product_data(product_id, company_id, product_name){
   console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", web3.toUtf8(product_name));
 }
 
+function display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply){
+  console.log("#### review_id: ", review_id.toNumber(),
+              "user_id: ", user_id.toNumber(),
+              "product_id: ", product_id.toNumber(),
+              "review: ", web3.toUtf8(review),
+              "is_spam: ", is_spam ? "YES" : "NO",
+              "review_status: ", REVIEW_STATUS[review_status.toNumber()],
+              "reply: ", web3.toUtf8(reply));
+}
+
+
 contract('Authentication', async function(accounts) {
   let authentication;
   let rmstoken;
@@ -124,7 +135,7 @@ contract('Authentication', async function(accounts) {
       false,
       {from: accounts[1]}
     );
-/*    await authentication.createReview(
+    await authentication.createReview(
       1,
       5,
       "This is FIRST product!\nIt's awesome!!!!\nI'll buy again.",
@@ -132,14 +143,14 @@ contract('Authentication', async function(accounts) {
       {from: accounts[2]}
     );
     await authentication.createReview(
-      6,
+      5,
       2,
       "This is FIFTH product!\n\nIt's the worst!\n",
       true,
       {from: accounts[1]}
     );
     await authentication.createReview(
-      6,
+      5,
       5,
       "This is FIFTH product!\n\nIt's the best!\n",
       false,
@@ -152,14 +163,14 @@ contract('Authentication', async function(accounts) {
       true,
       {from: accounts[1]}
     );
-*/
+
     let reviewCount = (await authentication.reviewCount.call()).toNumber();
     console.error("Review Count :", reviewCount);
 
-    // for(let i = 1; i <= productCount; i++){
-    //   let [product_id, company_id, product_name] = await authentication.getProduct.call(i);
-    //   display_product_data(product_id, company_id, product_name);
-    // }
-    assert.equal(reviewCount, 1, "review count is wrong.");
+    for(let i = 1; i <= reviewCount; i++){
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(i);
+      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+    }
+    assert.equal(reviewCount, 5, "review count is wrong.");
   });
 });
