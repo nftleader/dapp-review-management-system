@@ -25,6 +25,8 @@ contract Authentication is Killable {
 
     bytes32 company_name;
     bytes32 company_address;
+
+    address eth_address;
   }
 
   struct Product{
@@ -35,11 +37,13 @@ contract Authentication is Killable {
 
   struct Review{
     uint id;
+    uint user_id;
     uint product_id;
     uint company_id;
     uint rating;
-    bool is_spam;
     bytes32 review;
+    bool is_spam;
+    ReviewStatus review_status;
     bytes32 reply;
   }
 
@@ -55,7 +59,7 @@ contract Authentication is Killable {
   uint public productCount;
 
   //reviews
-  mapping (uint => Review) private reviewById;
+  mapping (uint => Review) private reviews;
   uint public reviewCount;
   
 
@@ -63,9 +67,12 @@ contract Authentication is Killable {
 
   modifier onlyExistingUser() { require(users[msg.sender].id > 0, "User is not registered"); _; }
   modifier onlyNONExistingUser() { require(users[msg.sender].id == 0, "User is already registered"); _; }
-  modifier onlyExistingUserID(uint userid) { require(usersById[userid] != 0x0, "User ID is not registered"); _; }
 
+  modifier onlyExistingUserID(uint userid) { require(usersById[userid] != 0x0, "User ID is not registered"); _; }
   modifier onlyExistingProductID(uint prodid) { require(products[prodid].id > 0, "Product ID is not registered"); _; }
+  modifier onlyExistingReviewID(uint revid) { require(reviews[revid].id > 0, "Review ID is not registered"); _; }
+
+  modifier validRating(uint rating) { require(rating >= 1 && rating <= 5, "rating should be between 1 and 5"); _; }
 
   modifier onlyCompany{
     require(users[msg.sender].id > 0, "User does not exist");
@@ -154,6 +161,7 @@ contract Authentication is Killable {
     totalCount++;
     newbie.id = totalCount;
     newbie.userType = UserType.User;
+    newbie.eth_address = msg.sender;
 
     usersById[totalCount] = msg.sender;
     users[msg.sender] = newbie;
@@ -178,6 +186,7 @@ contract Authentication is Killable {
     totalCount++;
     newbie.id = totalCount;
     newbie.userType = UserType.Company;
+    newbie.eth_address = msg.sender;
 
     usersById[totalCount] = msg.sender;
     users[msg.sender] = newbie;
@@ -205,6 +214,61 @@ contract Authentication is Killable {
       products[index].company_id,
       products[index].product_name
     );
+  }
+
+
+  function createReview(uint _prod_id, uint _rating, string _review, bool _isSpam)
+  payable public
+  onlyUser onlyExistingProductID(_prod_id) validRating(_rating)
+  returns(uint){
+    reviewCount++;
+    reviews[reviewCount].id = reviewCount;
+    reviews[reviewCount].user_id = users[msg.sender].id;
+    reviews[reviewCount].product_id = _prod_id;
+    reviews[reviewCount].company_id = products[_prod_id].company_id;
+    reviews[reviewCount].rating = _rating;
+    reviews[reviewCount].review = stringToBytes32(_review);
+    reviews[reviewCount].is_spam = _isSpam;
+    reviews[reviewCount].review_status = ReviewStatus.Pending;
+    return reviewCount;
+  }
+
+  function getReview(uint _review_id)
+  constant public
+  onlyExistingReviewID(_review_id)
+  returns(uint, uint, uint, uint, uint, bytes32, bool, ReviewStatus, bytes32){
+    Review memory review = reviews[_review_id];
+    return (
+      review.id,
+      review.user_id,
+      review.product_id,
+      review.company_id,
+      review.rating,
+      review.review,
+      review.is_spam,
+      review.review_status,
+      review.reply
+    );
+  }
+
+  function replyReview(uint _review_id, string _reply)
+  payable public
+  onlyCompany onlyExistingReviewID(_review_id)
+  returns(uint){
+    reviews[_review_id].review_status = ReviewStatus.Negative;
+    reviews[_review_id].reply = stringToBytes32(_reply);
+    return _review_id;
+  }
+
+  function approveReview(uint _review_id)
+  payable public
+  onlyCompany onlyExistingReviewID(_review_id)
+  returns(uint){
+    reviews[_review_id].review_status = ReviewStatus.Positive;
+    //send tokens
+    //reviews[reviewCount].user_id = users[msg.sender].id;
+    //User memory user = users[usersById[reviews[_review_id].user_id]];
+    return _review_id;
   }
 
 

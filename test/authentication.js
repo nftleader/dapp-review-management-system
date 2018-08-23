@@ -22,7 +22,10 @@ function display_user_data(id, userType, email, user_first_name, user_second_nam
                 "user_zipcode: ", web3.toUtf8(user_zipcode),
                 "company_name: ", web3.toUtf8(company_name),
                 "company_address: ", web3.toUtf8(company_address));
+}
 
+function display_product_data(product_id, company_id, product_name){
+  console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", web3.toUtf8(product_name));
 }
 
 contract('Authentication', async function(accounts) {
@@ -102,16 +105,61 @@ contract('Authentication', async function(accounts) {
     await authentication.createProduct("Second Product",{from: accounts[4]});
     await authentication.createProduct("Sixth Product",{from: accounts[4]});
 
-    //display product list
+    //5 display product list
 
     let productCount = (await authentication.productCount.call()).toNumber();
     console.error("Product Count :", productCount);
     for(let i = 1; i <= productCount; i++){
       let [product_id, company_id, product_name] = await authentication.getProduct.call(i);
-      console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", web3.toUtf8(product_name));
+      display_product_data(product_id, company_id, product_name);
     }
 
     assert.equal(productCount, 6, "total count is wrong.");
 
+    //6 create 5 reviews
+    await authentication.createReview(
+      1,
+      3,
+      "This is FIRST product!\nIt's awesome!!!!\nI'll buy again.",
+      false,
+      {from: accounts[1]}
+    );
+/*    await authentication.createReview(
+      1,
+      5,
+      "This is FIRST product!\nIt's awesome!!!!\nI'll buy again.",
+      false,
+      {from: accounts[2]}
+    );
+    await authentication.createReview(
+      6,
+      2,
+      "This is FIFTH product!\n\nIt's the worst!\n",
+      true,
+      {from: accounts[1]}
+    );
+    await authentication.createReview(
+      6,
+      5,
+      "This is FIFTH product!\n\nIt's the best!\n",
+      false,
+      {from: accounts[0]}
+    );
+    await authentication.createReview(
+      6,
+      1,
+      "This is SIXTH product!\n\nIt's the worst product I've ever seen!!!\n",
+      true,
+      {from: accounts[1]}
+    );
+*/
+    let reviewCount = (await authentication.reviewCount.call()).toNumber();
+    console.error("Review Count :", reviewCount);
+
+    // for(let i = 1; i <= productCount; i++){
+    //   let [product_id, company_id, product_name] = await authentication.getProduct.call(i);
+    //   display_product_data(product_id, company_id, product_name);
+    // }
+    assert.equal(reviewCount, 1, "review count is wrong.");
   });
 });
