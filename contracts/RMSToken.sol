@@ -20,8 +20,8 @@ contract RMSToken {
 
     constructor() public {
         // Initially assign all tokens to the contract's creator.
-        balances[msg.sender] = totalSupply;
-        emit Transfer(address(0), msg.sender, totalSupply);
+        //balances[msg.sender] = totalSupply;
+        //emit Transfer(address(0), msg.sender, totalSupply);
     }
 
     function transfer(address to, uint256 value) public returns (bool success) {

@@ -1,5 +1,6 @@
 var Authentication = artifacts.require("./Authentication.sol");
 var RMSToken = artifacts.require("./RMSToken.sol");
+var MerkleProof = artifacts.require("./MerkleProof.sol");
 
 const USER_TYPES = ["User", "Company"];
 const REVIEW_STATUS = ["Pending", "Positive", "Negative"];
