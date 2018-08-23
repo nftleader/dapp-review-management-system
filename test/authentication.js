@@ -164,6 +164,14 @@ contract('Authentication', async function(accounts) {
       true,
       {from: accounts[1]}
     );
+    await authentication.createReview(
+      3,
+      4,
+      "This is THIRD product!\tIt's the worst product I've ever seen!!!\n",
+      true,
+      {from: accounts[1]}
+    );
+
 
     let reviewCount = (await authentication.reviewCount.call()).toNumber();
     console.error("Review Count :", reviewCount);
@@ -172,25 +180,26 @@ contract('Authentication', async function(accounts) {
       let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(i);
       display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
     }
-    assert.equal(reviewCount, 5, "review count is wrong.");
+    assert.equal(reviewCount, 6, "review count is wrong.");
 
     //7 reply reviews
     console.log("\n\nReply to Reviews 1, 3, 5: ")
-    await authentication.replyReview(1, "This is reply", {from:accounts[3]});
-    await authentication.replyReview(3, "Bad Review", {from:accounts[4]});
-    await authentication.replyReview(5, "Worst Review! This guy is mad!", {from:accounts[4]});
-    {
-      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(1);
+    let reviewIndexes = [1, 3, 5];
+    let accountIndexes = [3, 4, 4];
+    for(i = 0; i < 3; i++){
+      await authentication.replyReview(reviewIndexes[i], "This is reply", {from:accounts[accountIndexes[i]]});
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(reviewIndexes[i]);
       display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
     }
-    {
-      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(3);
+
+    //8. accept reviews
+    console.log("\n\nApprove Reviews 2, 4, 6: ");
+    reviewIndexes = [2, 4, 6];
+    accountIndexes = [3, 4, 3];
+    for(i = 0; i < 3; i++){
+      await authentication.approveReview(reviewIndexes[i], {from:accounts[accountIndexes[i]]});
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(reviewIndexes[i]);
       display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
     }
-    {
-      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(5);
-      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
-    }
-    
   });
 });
