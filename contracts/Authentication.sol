@@ -50,6 +50,10 @@ contract Authentication is Killable {
   uint public totalCount;
   uint public companyCount;
 
+  //product
+  mapping (uint => Product) private products;
+  uint public productCount;
+
   //reviews
   mapping (uint => Review) private reviewById;
   uint public reviewCount;
@@ -59,7 +63,9 @@ contract Authentication is Killable {
 
   modifier onlyExistingUser() { require(users[msg.sender].id > 0, "User is not registered"); _; }
   modifier onlyNONExistingUser() { require(users[msg.sender].id == 0, "User is already registered"); _; }
-  modifier onlyExistingUserID(uint userid) { require(usersById[userid] != 0, "User ID is not registered"); _; }
+  modifier onlyExistingUserID(uint userid) { require(usersById[userid] != 0x0, "User ID is not registered"); _; }
+
+  modifier onlyExistingProductID(uint prodid) { require(products[prodid].id > 0, "Product ID is not registered"); _; }
 
   modifier onlyCompany{
     require(users[msg.sender].id > 0, "User does not exist");
@@ -84,9 +90,8 @@ contract Authentication is Killable {
   event LogNumber(uint num);
 
   function login()
-  public /*constant*/ payable  onlyExistingUser
+  public constant onlyExistingUser
   returns (uint, UserType, bytes32, bytes32, bytes32, bytes32,  bytes32, bytes32) {
-
     // emit LogString("-------  Login");
     // emit LogNumber(users[msg.sender].id);
     // emit LogBytes32(users[msg.sender].email);
@@ -103,6 +108,20 @@ contract Authentication is Killable {
             users[msg.sender].user_zipcode, 
             users[msg.sender].company_name, 
             users[msg.sender].company_address);
+  }
+
+  function getUser(uint index)
+  public constant onlyExistingUserID(index)
+  returns (uint, UserType, bytes32, bytes32, bytes32, bytes32,  bytes32, bytes32) {
+    User memory user = users[usersById[index]];
+    return (user.id, 
+            user.userType,
+            user.email,
+            user.user_first_name, 
+            user.user_second_name, 
+            user.user_zipcode, 
+            user.company_name, 
+            user.company_address);
   }
 
   /** @dev convert strint to bytes32
@@ -167,26 +186,27 @@ contract Authentication is Killable {
     return totalCount; //return userid
   }
 
-
-  function signup(bytes32 user_first_name)
-  public
-  payable
-  onlyValidName(user_first_name)
-  returns (bytes32) {
-    // Check if user exists.
-    // If yes, return user name.
-    // If no, check if name was sent.
-    // If yes, create and return user.
-
-    if (users[msg.sender].user_first_name == 0x0)
-    {
-        users[msg.sender].user_first_name = user_first_name;
-
-        return (users[msg.sender].user_first_name);
-    }
-
-    return (users[msg.sender].user_first_name);
+  function createProduct(string _product_name)
+  payable public onlyCompany
+  returns(uint){
+    productCount++;
+    products[productCount].product_name = stringToBytes32(_product_name);
+    products[productCount].id = productCount;
+    products[productCount].company_id = users[msg.sender].id;
+    return productCount;
   }
+  
+
+  function getProduct(uint index)
+  constant public onlyExistingProductID(index)
+  returns(uint, uint, bytes32){
+    return(
+      products[index].id,
+      products[index].company_id,
+      products[index].product_name
+    );
+  }
+
 
   function update(bytes32 user_first_name)
   public
