@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
-import { Table, Button, Grid } from 'semantic-ui-react'
+import { Table, Button, Grid, Input } from 'semantic-ui-react'
 import ReviewDisplayModal from './ReviewDisplayModal'
 import WriteReviewModal from './WriteReviewModal'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as CommonAction from 'components/Action/CommonAction'
 
 class ClientHome extends Component {
   constructor(props, { authData }) {
@@ -10,7 +14,10 @@ class ClientHome extends Component {
 
     this.state = {};
 
-    this.state.searchKey = "headphone..";
+
+    this.state.searchKey = "";
+    if (this.props.data.searchKey.searchKey != undefined)
+      this.state.searchKey = this.props.data.searchKey.searchKey;
 
     this.state.datas = [{
       product: 'aaa',
@@ -25,6 +32,28 @@ class ClientHome extends Component {
       company: '432email1.e.com',
       address: 'address871'
     },];
+
+    this.state.isOpenReviewDisplayModal = false;
+    this.state.isOpenWriteReviewModal = false;
+    this.state.curSelItem = null;
+  }
+
+  onClickSearch() {
+    this.props.action.searchAction(this.state.searchKey);
+  }
+
+  onClickItem(item) {
+    this.setState({
+      curSelItem: item,
+      isOpenReviewDisplayModal: true
+    })
+  }
+
+  onClickWriteReview(item) {
+    this.setState({
+      curSelItem: item,
+      isOpenWriteReviewModal: true
+    })
   }
 
   render() {
@@ -32,7 +61,9 @@ class ClientHome extends Component {
       <main className="container">
         <div className="row">
           <div className="col-md-12">
-            { this.state.searchKey != "" ? <h3>Find: <b>{this.state.searchKey}</b></h3> : ''}
+            <Input size='medium' icon={{ name: 'search', circular: true, link: true, onClick:() => this.onClickSearch() }} placeholder='Search...'
+                onChange={(event, value) => { this.setState({searchKey: value.value})}} value={this.state.searchKey} autoFocus/>
+
             <hr></hr>
             <Table celled structured>
               <Table.Header>
@@ -48,22 +79,24 @@ class ClientHome extends Component {
               <Table.Body>
               {this.state.datas.map((item, index) => {
                 return ( <Table.Row key={item.product}>
-                          <Table.Cell>{index + 1}</Table.Cell>
-                          <Table.Cell>{item.product}</Table.Cell>
-                          <Table.Cell>{item.company}</Table.Cell>
-                          <Table.Cell>{item.address}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{index + 1}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.product}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.company}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.address}</Table.Cell>
                           <Table.Cell>
-                            <Button.Group>
-                              <ReviewDisplayModal info={item}/>
-                              <Button.Or />
-                              <WriteReviewModal info={item}/>
-                            </Button.Group>
+                            <Button positive onClick={() => {this.onClickWriteReview(item)}}>Write review</Button>
                           </Table.Cell>
                         </Table.Row> )})
               }
                 
               </Table.Body>
             </Table>
+
+            <ReviewDisplayModal info={this.state.curSelItem} isOpenDialog={this.state.isOpenReviewDisplayModal}
+                  onCloseDialog={() => {this.setState({isOpenReviewDisplayModal: false})}}/>
+            
+            <WriteReviewModal info={this.state.curSelItem} isOpenDialog={this.state.isOpenWriteReviewModal}
+                  onCloseDialog={() => {this.setState({isOpenWriteReviewModal: false})}}/>
           </div>
         </div>
       </main>
@@ -71,4 +104,12 @@ class ClientHome extends Component {
   }
 }
 
-export default ClientHome
+const mapStatetoProps = state => ({
+  data: state.common
+})
+
+const mapDispatchToProps = dispatch => ({
+  action: bindActionCreators(CommonAction, dispatch),
+})
+
+export default connect(mapStatetoProps, mapDispatchToProps)(ClientHome)

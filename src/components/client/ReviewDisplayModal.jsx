@@ -10,6 +10,7 @@ class ReviewDisplayModal extends React.Component {
         super(props);
 
         this.state = {};
+
         this.state.ratings = [{
             rating: 4,
             review: "This project is awesome",
@@ -36,9 +37,13 @@ class ReviewDisplayModal extends React.Component {
             reply: "This is reply"
         }];
     }
+
     render() {
+        if (this.props.info == null)
+            return (<div></div>);
+
         return (
-            <Modal className="reviewdisplaymodal" trigger={<Button positive>Reviews</Button>} centered={false}>
+            <Modal className="reviewdisplaymodal" open={this.props.isOpenDialog} centered={false} onClose={() => {this.props.onCloseDialog()}}>
                 <Modal.Header>Product Reviews</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
@@ -76,7 +81,7 @@ class ReviewDisplayModal extends React.Component {
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button negative content='Close' />
+                    <Button negative content='Close' onClick={() => {this.props.onCloseDialog()}}/>
                 </Modal.Actions>
             </Modal>
         );

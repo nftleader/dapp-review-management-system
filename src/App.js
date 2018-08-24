@@ -22,12 +22,47 @@ class App extends Component {
         <li className="pure-menu-item">
           <Link to="/profile" className="pure-menu-link">Profile</Link>
         </li>
+
+        
+        
+        
+        <li className="pure-menu-item">
+            <Link to="/company_dashboard" className="pure-menu-link">Company-Dashboard</Link>
+        </li>
+        
+        <li className="pure-menu-item">
+            <Link to="/company_profile" className="pure-menu-link">Company-Profile</Link>
+        </li>
+        
         <LogoutButtonContainer />
       </span>
     )
 
     const OnlyGuestLinks = HiddenOnlyAuth(() =>
       <span>
+        
+        <li className="pure-menu-item">
+          <Link to="/client_search" className="pure-menu-link">Client-Search</Link>
+        </li>
+        
+        <li className="pure-menu-item">
+            <Link to="/client_home" className="pure-menu-link">Client-Home</Link>
+        </li>
+        
+        <li className="pure-menu-item">
+            <Link to="/client_profile" className="pure-menu-link">Client-Profile</Link>
+        </li>
+
+        
+        
+        <li className="pure-menu-item">
+            <Link to="/company_dashboard" className="pure-menu-link">Company-Dashboard</Link>
+        </li>
+        
+        <li className="pure-menu-item">
+            <Link to="/company_profile" className="pure-menu-link">Company-Profile</Link>
+        </li>
+        
         <li className="pure-menu-item">
           <Link to="/signup" className="pure-menu-link">Sign Up</Link>
         </li>
@@ -39,17 +74,15 @@ class App extends Component {
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
           <ul className="pure-menu-list navbar-right">
+          
             <OnlyGuestLinks />
             <OnlyAuthLinks />
           </ul>
           <Link to="/" className="pure-menu-heading pure-menu-link">Truffle Box</Link>
 
           
-          <Link to="/client_search" className="pure-menu-link">Client-Search</Link>
-          <Link to="/client_home" className="pure-menu-link">Client-Home</Link>
-          <Link to="/client_profile" className="pure-menu-link">Client-Profile</Link>
         </nav>
-        <div style={{paddingTop: 100}}>
+        <div style={{paddingTop: 30}}>
           {this.props.children}
         </div>
       </div>

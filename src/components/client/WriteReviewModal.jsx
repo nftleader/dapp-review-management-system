@@ -20,8 +20,11 @@ class WriteReviewModal extends React.Component {
     }
 
     render() {
+        if (this.props.info == null)
+            return (<div></div>);
+
         return (
-            <Modal className="writereviewmodal" trigger={<Button positive>Write review</Button>} centered={false}>
+            <Modal className="writereviewmodal" open={this.props.isOpenDialog} centered={false} onClose={() => {this.props.onCloseDialog()}}>
                 <Modal.Header>Write Review</Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
@@ -46,7 +49,7 @@ class WriteReviewModal extends React.Component {
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button negative content='Close' />
+                    <Button negative content='Close' onClick={() => {this.props.onCloseDialog()}}/>
                     <Button positive icon='checkmark' labelPosition='right' content='Post Review' onClick={() => this.onPostReview()}/>
                 </Modal.Actions>
             </Modal>

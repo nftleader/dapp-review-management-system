@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input } from 'semantic-ui-react'
+import { Input, Header } from 'semantic-ui-react'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -24,9 +24,12 @@ class ClientSearch extends Component {
     return(
       <main className="container">
         <div className="row">
-          <div className="col-md-12">
-            <Input icon={{ name: 'search', circular: true, link: true, onClick:() => this.onClickSearch() }} placeholder='Search...'
-                    onChange={(event, value) => { this.state.searchKey = value.value }}/>
+          <div className="col-md-12" style={{textAlign: "center"}}>
+            <Header size="medium">
+                Please input search key...
+            </Header>
+            <Input size='massive' icon={{ name: 'search', circular: true, link: true, onClick:() => this.onClickSearch() }} placeholder='Search...'
+                onChange={(event, value) => { this.state.searchKey = value.value }} autoFocus/>
           </div>
         </div>
       </main>

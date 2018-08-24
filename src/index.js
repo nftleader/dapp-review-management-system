@@ -17,6 +17,9 @@ import ClientSearch from 'components/client/ClientSearch'
 import ClientHome from 'components/client/ClientHome'
 import ClientProfile from 'components/client/ClientProfile'
 
+import CompanyDashboard from 'components/admin/CompanyDashboard'
+import CompanyProfile from 'components/admin/CompanyProfile'
+
 // Redux Store
 import store from './store'
 import 'semantic-ui-css/semantic.min.css';
@@ -43,6 +46,9 @@ ReactDOM.render((
           <Route path="client_search" component={ClientSearch} />
           <Route path="client_home" component={ClientHome} />
           <Route path="client_profile" component={ClientProfile} />
+          
+          <Route path="company_dashboard" component={CompanyDashboard} />
+          <Route path="company_profile" component={CompanyProfile} />
 
 
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
