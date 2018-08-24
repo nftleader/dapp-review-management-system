@@ -10,7 +10,7 @@ export function initData() {
     return (dispatch) => {
         //Get data from Web3
         let blockchainData = {};
-        dispatch(initDataReducer(blockchainData));
+        dispatch(blockchainDataReducer(blockchainData));
     };
 };
 
