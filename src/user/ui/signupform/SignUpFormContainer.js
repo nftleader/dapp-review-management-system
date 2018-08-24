@@ -8,8 +8,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSignUpFormSubmit: (name) => {
-      dispatch(signUpUser(name))
+    onSignUpFormSubmit: (user_type, email, user_first_name, user_second_name, user_zipcode, company_name, company_address) => {
+      dispatch(signUpUser(user_type, email, user_first_name, user_second_name, user_zipcode, company_name, company_address))
     }
   }
 }

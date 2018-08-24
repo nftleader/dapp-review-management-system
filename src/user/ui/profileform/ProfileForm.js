@@ -3,38 +3,17 @@ import React, { Component } from 'react'
 class ProfileForm extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      name: this.props.name
-    }
-  }
-
-  onInputChange(event) {
-    this.setState({ name: event.target.value })
-  }
-
-  handleSubmit(event) {
-    event.preventDefault()
-
-    if (this.state.name.length < 2)
-    {
-      return alert('Please fill in your name.')
-    }
-
-    this.props.onProfileFormSubmit(this.state.name)
   }
 
   render() {
     return(
-      <form className="pure-form pure-form-stacked" onSubmit={this.handleSubmit.bind(this)}>
+      <form className="pure-form pure-form-stacked">
         <fieldset>
-          <label htmlFor="name">Name</label>
-          <input id="name" type="text" value={this.state.name} onChange={this.onInputChange.bind(this)} placeholder="Name" />
-          <span className="pure-form-message">This is a required field.</span>
-
-          <br />
-
-          <button type="submit" className="pure-button pure-button-primary">Update</button>
+          <label>Email: <b>{this.props.email}</b></label>
+          {this.props.user_type == 0 && <label>Name: <b>{this.props.user_first_name} {this.props.user_second_name} </b></label>}
+          {this.props.user_type == 0 && <label>Zip Code: <b>{this.props.user_zipcode}</b></label>}
+          {this.props.user_type == 1 && <label>Company Name: <b>{this.props.company_name}</b></label>}
+          {this.props.user_type == 1 && <label>Company Address: <b>{this.props.company_address}</b></label>}
         </fieldset>
       </form>
     )

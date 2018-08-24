@@ -59,7 +59,7 @@ contract('Authentication', async function(accounts) {
     let expectedSecondName = 'second name';
     let expectedZipCode = '65432432';
 
-    await authentication.signupUser(expectedEmail, expectedFirstName, expectedSecondName, expectedZipCode, {from: accounts[0]});
+  await authentication.signupUser(expectedEmail, expectedFirstName, expectedSecondName, expectedZipCode, {from: accounts[0]});
     let [id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address] = await authentication.login.call({from: accounts[0]});
     display_user_data(id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address);
     assert.equal(userType.toNumber(), 0, "The user is company.");

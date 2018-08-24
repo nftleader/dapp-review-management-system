@@ -96,16 +96,16 @@ contract Authentication is Killable {
   event LogNumber(uint num);
 
   function login()
-  public /*constant*/payable onlyExistingUser
+  public view onlyExistingUser
   returns (uint, UserType, string, string, string, string,  string, string) {
-    emit LogString("-------  Login");
-    emit LogNumber(users[msg.sender].id);
-    emit LogString(users[msg.sender].email);
-    emit LogString(users[msg.sender].user_first_name);
-    emit LogString(users[msg.sender].user_second_name);
-    emit LogString(users[msg.sender].user_zipcode);
-    emit LogString(users[msg.sender].company_name);
-    emit LogString(users[msg.sender].company_address);
+    // emit LogString("-------  Login");
+    // emit LogNumber(users[msg.sender].id);
+    // emit LogString(users[msg.sender].email);
+    // emit LogString(users[msg.sender].user_first_name);
+    // emit LogString(users[msg.sender].user_second_name);
+    // emit LogString(users[msg.sender].user_zipcode);
+    // emit LogString(users[msg.sender].company_name);
+    // emit LogString(users[msg.sender].company_address);
     return (users[msg.sender].id, 
             users[msg.sender].userType,
             users[msg.sender].email,
