@@ -52,7 +52,7 @@ function display_review_data(review_id, user_id, product_id, company_id, rating,
 let getBlockchainData = async function(authentication, coinbase){
   let BlockchainObj = {
     type: "BLOCKCHAIN_DATA",
-    payload:{
+    data:{
       balance: 0,
 
       userData:[],
@@ -66,6 +66,7 @@ let getBlockchainData = async function(authentication, coinbase){
   let web3 = store.getState().web3.web3Instance;
 
   //my balance
+//  let userbalance = (await authentication.getUserBalance(user_id)).toNumber();
 
   //user list
   let allUserCount = (await authentication.userCount.call()).toNumber();
@@ -100,9 +101,9 @@ let getBlockchainData = async function(authentication, coinbase){
       company_name: mixedObj.company_name,
       company_address: mixedObj.company_address
     }
-    BlockchainObj.payload.allUserData.push(mixedObj);
-    BlockchainObj.payload.userData.push(userObj);
-    BlockchainObj.payload.companyData.push(companyObj);
+    BlockchainObj.data.allUserData.push(mixedObj);
+    BlockchainObj.data.userData.push(userObj);
+    BlockchainObj.data.companyData.push(companyObj);
   }
 
   //product list
@@ -119,7 +120,7 @@ let getBlockchainData = async function(authentication, coinbase){
       company_id: company_id.toNumber(),
       product_name: product_name
     }
-    BlockchainObj.payload.productData.push(obj);
+    BlockchainObj.data.productData.push(obj);
   }
 
   //review list
@@ -142,7 +143,7 @@ let getBlockchainData = async function(authentication, coinbase){
       review_status: review_status.toNumber(),
       reply: reply
     }
-    BlockchainObj.payload.reviewData.push(obj);
+    BlockchainObj.data.reviewData.push(obj);
   }
 
   return BlockchainObj; 
