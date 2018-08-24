@@ -1,6 +1,7 @@
 import AuthenticationContract from '../../../../build/contracts/Authentication.json'
 import { browserHistory } from 'react-router'
 import store from '../../../store'
+import {USER_TYPES, REVIEW_STATUS} from '../../../util/globals'
 
 const contract = require('truffle-contract')
 
@@ -11,6 +12,142 @@ function userLoggedIn(user) {
     payload: user
   }
 }
+
+
+function display_user_data(id, userType, email, user_first_name, user_second_name, user_zipcode, company_name, company_address){
+  console.log("**** id: ", id.toNumber());
+    console.log("**** userType: ", userType.toNumber());
+    console.log("**** email: ", email);
+    console.log("**** user_first_name: ", user_first_name);
+    console.log("**** user_second_name: ", user_second_name);
+    console.log("**** user_zipcode: ", user_zipcode);
+    console.log("**** company_name: ", company_name);
+    console.log("**** company_address: ", company_address);
+
+/*    console.log("**** id: ", id.toNumber(),
+                "userType: ", USER_TYPES[userType.toNumber()],
+                "email: ", email,
+                "user_first_name: ", user_first_name,
+                "user_second_name: ", user_second_name,
+                "user_zipcode: ", user_zipcode,
+                "company_name: ", company_name,
+                "company_address: ", company_address);
+*/
+}
+
+function display_product_data(product_id, company_id, product_name){
+  console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", product_name);
+}
+
+function display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply){
+  console.log("#### review_id: ", review_id.toNumber(),
+              "user_id: ", user_id.toNumber(),
+              "product_id: ", product_id.toNumber(),
+              "review: ", review,
+              "is_spam: ", is_spam ? "YES" : "NO",
+              "review_status: ", REVIEW_STATUS[review_status.toNumber()],
+              "reply: ", reply);
+}
+  
+let getBlockchainData = async function(authentication, coinbase){
+  let BlockchainObj = {
+    type: "BLOCKCHAIN_DATA",
+    payload:{
+      balance: 0,
+
+      userData:[],
+      companyData:[],
+      allUserData:[],
+      productData:[],
+      reviewData:[],
+    }
+  };
+
+  let web3 = store.getState().web3.web3Instance;
+
+  //my balance
+
+  //user list
+  let allUserCount = (await authentication.userCount.call()).toNumber();
+  console.log("\n\nUser Count : ", allUserCount);
+
+  for(let i = 1; i <= allUserCount; i++){
+    let [id, user_type, email, user_first_name, user_second_name, user_zipcode, company_name, company_address] = await authentication.getUser.call(i);
+    console.log("^^^^ id: ", id.toNumber(), " user_type: ", USER_TYPES[user_type.toNumber()], " email: ", email);
+
+    let mixedObj = {
+      id: id.toNumber(),
+      user_type: user_type.toNumber(),
+      email: email,
+      user_first_name: user_first_name,
+      user_second_name: user_second_name,
+      user_zipcode: user_zipcode,
+      company_name: company_name,
+      company_address: company_address
+    }
+
+    let userObj = {
+      id: mixedObj.id,
+      email: mixedObj.email,
+      user_first_name: mixedObj.user_first_name,
+      user_second_name: mixedObj.user_second_name,
+      user_zipcode: mixedObj.user_zipcode,
+    }
+
+    let companyObj = {
+      id: mixedObj.id,
+      email: mixedObj.email,
+      company_name: mixedObj.company_name,
+      company_address: mixedObj.company_address
+    }
+    BlockchainObj.payload.allUserData.push(mixedObj);
+    BlockchainObj.payload.userData.push(userObj);
+    BlockchainObj.payload.companyData.push(companyObj);
+  }
+
+  //product list
+
+  let productCount = (await authentication.productCount.call()).toNumber();
+  console.log("\n\nProduct Count :", productCount);
+
+  for(let i = 1; i <= productCount; i++){
+    let [product_id, company_id, product_name] = await authentication.getProduct.call(i);
+    display_product_data(product_id, company_id, product_name);
+
+    let obj = {
+      product_id: product_id.toNumber(),
+      company_id: company_id.toNumber(),
+      product_name: product_name
+    }
+    BlockchainObj.payload.productData.push(obj);
+  }
+
+  //review list
+
+  let reviewCount = (await authentication.reviewCount.call()).toNumber();
+  console.log("\n\nReview Count :", reviewCount);
+
+  for(let i = 1; i <= reviewCount; i++){
+    let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(i);
+    display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+    
+    let obj = {
+      review_id: review_id.toNumber(),
+      user_id: user_id.toNumber(),
+      product_id: product_id.toNumber(),
+      company_id: company_id.toNumber(),
+      rating: rating.toNumber(),
+      review: review,
+      is_spam: is_spam,// ? "YES" : "NO",
+      review_status: review_status.toNumber(),
+      reply: reply
+    }
+    BlockchainObj.payload.reviewData.push(obj);
+  }
+
+  return BlockchainObj; 
+}
+
 
 export function loginUser() {
   let web3 = store.getState().web3.web3Instance
@@ -30,7 +167,7 @@ export function loginUser() {
       web3.eth.getCoinbase((error, coinbase) => {
         // Log errors, if any.
         if (error) {
-          console.error(error);
+          console.log(error);
         }
 
         authentication.deployed().then(function(instance) {
@@ -56,7 +193,11 @@ export function loginUser() {
             };
             console.log(obj);
             dispatch(userLoggedIn(obj));
-
+            return getBlockchainData(authenticationInstance, coinbase);
+          })
+          .then(function(result){ //finshed getting product
+            if(result)  dispatch(result);
+            
             // Used a manual redirect here as opposed to a wrapper.
             // This way, once logged in a user can still access the home page.
             var currentLocation = browserHistory.getCurrentLocation()
@@ -70,7 +211,7 @@ export function loginUser() {
           })
           .catch(function(result) {
             // If error, go to signup page.
-            console.error('Wallet ' + coinbase + ' does not have an account!')
+            console.log('Wallet ' + coinbase + ' does not have an account!')
 
             return browserHistory.push('/signup')
           })
@@ -78,6 +219,6 @@ export function loginUser() {
       })
     }
   } else {
-    console.error('Web3 is not initialized.');
+    console.log('Web3 is not initialized.');
   }
 }

@@ -1,7 +1,7 @@
 import AuthenticationContract from '../../../../build/contracts/Authentication.json'
 import { loginUser } from '../loginbutton/LoginButtonActions'
 import store from '../../../store'
-import {USER_TYPE, REVIEW_STATUS} from '../../../util/globals'
+import {USER_TYPES, REVIEW_STATUS} from '../../../util/globals'
 const contract = require('truffle-contract')
 
 export function signUpUser(user_type, email, user_first_name, user_second_name, user_zipcode, company_name, company_address) {
@@ -29,7 +29,7 @@ export function signUpUser(user_type, email, user_first_name, user_second_name, 
           authenticationInstance = instance
 
           // Attempt to sign up user.
-          if( USER_TYPE[user_type] == "User" ){
+          if( USER_TYPES[user_type] == "User" ){
             authenticationInstance.signupUser(email, user_first_name, user_second_name, user_zipcode, {from: coinbase})
             .then(function(result) {
               // If no error, login user.
