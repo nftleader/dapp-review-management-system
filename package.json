@@ -50,15 +50,18 @@
   "dependencies": {
     "ethereumjs-util": "^5.2.0",
     "merkle-tree-solidity": "^1.0.8",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.1",
+    "react-google-recaptcha": "^1.0.0",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-auth-wrapper": "^1.0.0",
     "redux-thunk": "^2.2.0",
-    "scrypt": "^6.0.3"
+    "scrypt": "^6.0.3",
+    "semantic-ui-css": "^2.3.3",
+    "semantic-ui-react": "^0.82.3"
   },
   "scripts": {
     "start": "node scripts/start.js",

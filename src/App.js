@@ -42,10 +42,16 @@ class App extends Component {
             <OnlyGuestLinks />
             <OnlyAuthLinks />
           </ul>
-          <Link to="/" className="pure-menu-heading pure-menu-link">Review Management System</Link>
-        </nav>
+          <Link to="/" className="pure-menu-heading pure-menu-link">Truffle Box</Link>
 
-        {this.props.children}
+          
+          <Link to="/client_search" className="pure-menu-link">Client-Search</Link>
+          <Link to="/client_home" className="pure-menu-link">Client-Home</Link>
+          <Link to="/client_profile" className="pure-menu-link">Client-Profile</Link>
+        </nav>
+        <div style={{paddingTop: 100}}>
+          {this.props.children}
+        </div>
       </div>
     );
   }
