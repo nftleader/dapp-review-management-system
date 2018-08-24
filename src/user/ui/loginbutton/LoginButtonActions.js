@@ -69,7 +69,7 @@ let getBlockchainData = async function(authentication, coinbase){
 //  let userbalance = (await authentication.getUserBalance(user_id)).toNumber();
 
   //user list
-  let allUserCount = (await authentication.userCount.call()).toNumber();
+  let allUserCount = (await authentication.totalCount.call()).toNumber();
   console.log("\n\nUser Count : ", allUserCount);
 
   for(let i = 1; i <= allUserCount; i++){
@@ -86,24 +86,27 @@ let getBlockchainData = async function(authentication, coinbase){
       company_name: company_name,
       company_address: company_address
     }
-
-    let userObj = {
-      id: mixedObj.id,
-      email: mixedObj.email,
-      user_first_name: mixedObj.user_first_name,
-      user_second_name: mixedObj.user_second_name,
-      user_zipcode: mixedObj.user_zipcode,
-    }
-
-    let companyObj = {
-      id: mixedObj.id,
-      email: mixedObj.email,
-      company_name: mixedObj.company_name,
-      company_address: mixedObj.company_address
-    }
     BlockchainObj.data.allUserData.push(mixedObj);
-    BlockchainObj.data.userData.push(userObj);
-    BlockchainObj.data.companyData.push(companyObj);
+
+    if( USER_TYPES[mixedObj.user_type] == 'User'){
+      let userObj = {
+        id: mixedObj.id,
+        email: mixedObj.email,
+        user_first_name: mixedObj.user_first_name,
+        user_second_name: mixedObj.user_second_name,
+        user_zipcode: mixedObj.user_zipcode,
+      }
+      BlockchainObj.data.userData.push(userObj);
+    }
+    else{
+      let companyObj = {
+        id: mixedObj.id,
+        email: mixedObj.email,
+        company_name: mixedObj.company_name,
+        company_address: mixedObj.company_address
+      }
+      BlockchainObj.data.companyData.push(companyObj);
+    }
   }
 
   //product list
