@@ -182,7 +182,7 @@ class CompanyDashboard extends Component {
     });
 
     //Fake review data
-/*    curReviewData.push({
+    /*curReviewData.push({
       review_id: 1,
       user_id: 1,
       product_id: selectedProduct.product_id,
@@ -219,8 +219,8 @@ class CompanyDashboard extends Component {
       review_status: 1,
       reply: "This is reply",
       merkle_tree_root_hash: "sadfsdf",
-    });
-*/
+    });*/
+
     this.setState({reviews: curReviewData});
     this.setState({curSelectedProduct: selectedProduct});
   }
@@ -245,10 +245,10 @@ class CompanyDashboard extends Component {
       return;
     }
 
-    if(reviewStatus == 1)
-      this.props.onApproveReview(item);
-    if(reviewStatus == 2)
+    if(item.reviewStatus == 2)
       this.props.onReplyReview(item);
+    if(item.reviewStatus == 1)
+      this.props.onApproveReview(item);
   }
 
   render() {
@@ -261,13 +261,15 @@ class CompanyDashboard extends Component {
             <Grid.Column width={6}>
               <Segment style={leftListStyle}>
                 <List divided relaxed ordered size="big">
-                  {this.props.data.blockchainData.productData.map((value, index) => 
-                    <List.Item as='a' key={index} style={value == this.state.curSelectedProduct ? activeStyle : {}}>
+                  {this.props.data.blockchainData.productData.map((value, index) => {
+                    if (value.company_id != this.props.company.id) return '';
+
+                    return (<List.Item as='a' key={index} style={value == this.state.curSelectedProduct ? activeStyle : {}}>
                       <List.Content>
                         <List.Header onClick={() => {this.onSelectProduct(value)}}>{value.product_name}</List.Header>
                       </List.Content>
-                    </List.Item>
-                  )}
+                    </List.Item>);
+                  })}
                 </List>
               </Segment>
               <Segment>
