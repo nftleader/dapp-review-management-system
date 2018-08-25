@@ -1,6 +1,9 @@
 import AuthenticationContract from '../../../build/contracts/Authentication.json'
 import store from '../../store'
 import {USER_TYPES, REVIEW_STATUS} from '../../util/globals'
+import MerkleTree, { checkProofOrdered, merkleRoot, checkProofOrderedSolidityFactory } from 'merkle-tree-solidity'
+import { sha3 } from 'ethereumjs-util'
+
 const contract = require('truffle-contract')
 
 export const blockchainDataReducer = (blockchainData) => ({
@@ -69,6 +72,33 @@ export function addProduct(product_obj) {
     }
 };
 
+function bufToHex(element) {
+    return Buffer.isBuffer(element) ? '0x' + element.toString('hex') : element;
+}
+
+function getMerkleTreeRootHash(somestring){
+    // create merkle tree
+    // expects 32 byte buffers as inputs (no hex strings)
+    // if using web3.sha3, convert first -> Buffer(web3.sha3('a'), 'hex')
+    const exploded = somestring.split("");
+    const elements = exploded.map(e => sha3(e))
+
+    // include the 'true' flag when generating the merkle tree
+    const merkleTree = new MerkleTree(elements, true)
+
+    // [same as above]
+    // get the merkle root
+    // returns 32 byte buffer
+    const root = merkleTree.getRoot()
+
+    // for convenience if only the root is desired
+    // this creates a new MerkleTree under the hood
+    // 2nd arg is "preserveOrder" flag
+
+    const easyRoot = merkleRoot(elements, true)
+
+    return bufToHex(easyRoot);
+}
 
 export function addReview(review_obj) {
     let web3 = store.getState().web3.web3Instance
@@ -85,11 +115,13 @@ export function addReview(review_obj) {
 
                 authentication.deployed().then(function(instance) {
                     authenticationInstance = instance
+                    let hash = getMerkleTreeRootHash(review_obj.review);
                     authenticationInstance.createReview(
                         review_obj.product_id,
                         review_obj.rating,
                         review_obj.review,
                         review_obj.is_spam,
+                        hash,
                         {from: coinbase})
                     .then(function(result) {
                         dispatch(addReviewReducer(review_obj))

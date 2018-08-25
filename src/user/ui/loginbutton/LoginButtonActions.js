@@ -133,8 +133,8 @@ let getBlockchainData = async function(authentication, coinbase){
   console.log("\n\nReview Count :", reviewCount);
 
   for(let i = 1; i <= reviewCount; i++){
-    let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(i);
-    display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+    let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply, hash ] = await authentication.getReview.call(i);
+    display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply, hash);
     
     let obj = {
       review_id: review_id.toNumber(),
@@ -145,7 +145,8 @@ let getBlockchainData = async function(authentication, coinbase){
       review: review,
       is_spam: is_spam,// ? "YES" : "NO",
       review_status: review_status.toNumber(),
-      reply: reply
+      reply: reply,
+      merkle_tree_root_hash: hash
     }
     BlockchainObj.data.reviewData.push(obj);
   }

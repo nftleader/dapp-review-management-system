@@ -29,14 +29,15 @@ function display_product_data(product_id, company_id, product_name){
   console.log("@@@@ product_id: ", product_id.toNumber(), "company_id: ", company_id.toNumber(), " product_name: ", product_name);
 }
 
-function display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply){
+function display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply, hash){
   console.log("#### review_id: ", review_id.toNumber(),
               "user_id: ", user_id.toNumber(),
               "product_id: ", product_id.toNumber(),
               "review: ", review,
               "is_spam: ", is_spam ? "YES" : "NO",
               "review_status: ", REVIEW_STATUS[review_status.toNumber()],
-              "reply: ", reply);
+              "reply: ", reply,
+              "hash: ", hash);
 }
 
 
@@ -129,12 +130,14 @@ contract('Authentication', async function(accounts) {
 
     assert.equal(productCount, 6, "total count is wrong.");
 
+    let somehash = "0xe0ebd530ec3a760d1f2d2e44fbb3a39106452fe4";
     //6 create 5 reviews
     await authentication.createReview(
       1,
       3,
       "This is FIRST product!\nIt's awesome!!!!\nI'll buy again.",
       false,
+      somehash,
       {from: accounts[1]}
     );
     await authentication.createReview(
@@ -142,6 +145,7 @@ contract('Authentication', async function(accounts) {
       5,
       "This is FIRST product!\nIt's awesome!!!!\nI'll buy again.",
       false,
+      somehash,
       {from: accounts[2]}
     );
     await authentication.createReview(
@@ -149,6 +153,7 @@ contract('Authentication', async function(accounts) {
       2,
       "This is FIFTH product!\tIt's the worst!\n",
       true,
+      somehash,
       {from: accounts[1]}
     );
     await authentication.createReview(
@@ -156,6 +161,7 @@ contract('Authentication', async function(accounts) {
       5,
       "This is FIFTH product!\tIt's the best!\n",
       false,
+      somehash,
       {from: accounts[0]}
     );
     await authentication.createReview(
@@ -163,6 +169,7 @@ contract('Authentication', async function(accounts) {
       1,
       "This is SIXTH product!\tIt's the worst product I've ever seen!!!\n",
       true,
+      somehash,
       {from: accounts[1]}
     );
     await authentication.createReview(
@@ -170,6 +177,7 @@ contract('Authentication', async function(accounts) {
       4,
       "This is THIRD product!\tIt's the worst product I've ever seen!!!\n",
       true,
+      somehash,
       {from: accounts[1]}
     );
 
@@ -178,8 +186,8 @@ contract('Authentication', async function(accounts) {
     console.error("Review Count :", reviewCount);
 
     for(let i = 1; i <= reviewCount; i++){
-      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply ] = await authentication.getReview.call(i);
-      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply);
+      let [review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply, hash ] = await authentication.getReview.call(i);
+      display_review_data(review_id, user_id, product_id, company_id, rating, review, is_spam, review_status, reply, hash);
     }
     assert.equal(reviewCount, 6, "review count is wrong.");
 
