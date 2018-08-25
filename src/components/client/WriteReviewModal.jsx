@@ -13,7 +13,7 @@ class WriteReviewModal extends React.Component {
         this.state = {};
 
         this.state.rateInfo = {
-            rating: 0,
+            rating: 1,
             review: "",
             recaptcha: "",
         };
@@ -31,8 +31,8 @@ class WriteReviewModal extends React.Component {
             review_status: 0,
             reply: ""
         }
-        alert(JSON.stringify(reviewObj));
         this.props.onAddReview(reviewObj);
+        this.props.onCloseDialog();
     }
 
     render() {
@@ -54,7 +54,7 @@ class WriteReviewModal extends React.Component {
                         <Form>
                             <Form.Field inline>
                                 <label>Your Rating: </label>
-                                <Rating icon='star' defaultRating={0} maxRating={5} onRate={(e, data) => {this.state.rateInfo.rating = data.rating;}}/>
+                                <Rating icon='star' defaultRating={1} maxRating={5} onRate={(e, data) => {this.state.rateInfo.rating = data.rating;}}/>
                             </Form.Field>
                             <Form.TextArea label='Your Review' placeholder='Tell us more about you...'
                                 onChange={(e, data) => {this.state.rateInfo.review = data.value}}/>

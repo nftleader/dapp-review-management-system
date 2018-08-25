@@ -78,7 +78,7 @@ class ClientHome extends Component {
                 onChange={(event, value) => { this.setState({searchKey: value.value})}} value={this.state.searchKey} autoFocus/>
 
             <hr></hr>
-            <Table celled structured>
+            <Table celled structured selectable>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>No</Table.HeaderCell>
@@ -91,7 +91,7 @@ class ClientHome extends Component {
 
               <Table.Body>
               {this.state.products.map((item, index) => {
-                return ( <Table.Row key={item.product_id}>
+                return ( <Table.Row key={item.product_id} active={item == this.state.curSelItem ? 1 : 0}>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{index + 1}</Table.Cell>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{item.product_name}</Table.Cell>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{item.company.company_name}</Table.Cell>

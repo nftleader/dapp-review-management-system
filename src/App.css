@@ -41,6 +41,7 @@ code {
   padding: 5px;
   background: #0c1a2b;
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  z-index: 1 !important;
 }
 
 .navbar a {
@@ -65,4 +66,8 @@ code {
 .navbar .uport-logo {
   height: 16px;
   margin-right: 10px;
+}
+
+.ui.list .list>.item .header, .ui.list>.item .header {
+  padding-left : 10px;
 }
