@@ -44,8 +44,7 @@ class CompanyDashboard extends Component {
         <Form>
           <Form.Field inline>
             <label>Rating: </label>
-            <Rating icon='star' defaultRating={0} maxRating={5} 
-                    onRate={(e, data) => {item.rating = data.rating;}}/>
+            <Rating icon='star' defaultRating={item.rating} maxRating={5}  disabled/>
           </Form.Field>
           
           <Form.Field inline>
@@ -54,8 +53,8 @@ class CompanyDashboard extends Component {
           </Form.Field>
                     
           <Form.Field inline>
-            <label>Status: </label>
-            <label>Pending</label>
+            <label>Spammy: </label>
+            <label>{item.is_spam == 1 ? "YES" : "NO"}</label>
           </Form.Field>
 
           <Form.Group inline>
@@ -75,7 +74,8 @@ class CompanyDashboard extends Component {
           </Form.Group>
 
           {item.review_sel_status == 2 ?
-          <Form.TextArea label='Reply: ' placeholder='Write your reply...' /> : ''}
+          <Form.TextArea label='Reply: ' placeholder='Write your reply...' 
+                          onChange={(event, value) => { this.onChangeReviewReply(index, value.value)}}/> : ''}
           
           <Grid>
             <Grid.Column width={16} textAlign='right' verticalAlign='middle'>
@@ -99,6 +99,11 @@ class CompanyDashboard extends Component {
           <Form.Field inline>
             <label>Review: </label>
             <pre>{item.review}</pre>
+          </Form.Field>
+                    
+          <Form.Field inline>
+            <label>Spammy: </label>
+            <label>{item.is_spam == 1 ? "YES" : "NO"}</label>
           </Form.Field>
                     
           <Form.Field inline>
@@ -211,9 +216,15 @@ class CompanyDashboard extends Component {
     this.setState({reviews: this.state.reviews});
   }
 
+  onChangeReviewReply(index, value) {
+    this.state.reviews [index].reply = value;
+  }
+
   onClickPostBtn(index, item) {
     this.state.reviews [index].review_status = this.state.reviews [index].review_sel_status;
     this.setState({reviews: this.state.reviews});
+    /////////////////////////////////
+    /////////////////////////////////
   }
 
   render() {
