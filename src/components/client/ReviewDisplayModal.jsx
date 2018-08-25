@@ -58,11 +58,22 @@ class ReviewDisplayModal extends React.Component {
                                             <Label>Review: </Label>
                                             <pre>{item.review}</pre>
                                         </Form.Field>
+
                                         {item.review_status == 2 ?
                                         <Form.Field inline>
                                             <Label>Reply: </Label>
                                             <pre>{item.reply}</pre>
                                         </Form.Field> : ''}
+
+                                        <Form.Field inline>
+                                            <Label>Spammy: </Label>
+                                            <label>{item.is_spam == 1 ? "YES" : "NO"}</label>
+                                        </Form.Field>
+
+                                        <Form.Field inline>
+                                            <Label>Hash: </Label>
+                                            <pre>{item.merkle_tree_root_hash}</pre>
+                                        </Form.Field>
                                     </List.Item>
                                 );
                                 })}

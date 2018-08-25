@@ -56,6 +56,11 @@ class CompanyDashboard extends Component {
             <label>Spammy: </label>
             <label>{item.is_spam == 1 ? "YES" : "NO"}</label>
           </Form.Field>
+          
+          <Form.Field inline>
+            <label>Hash: </label>
+            <label>{item.merkle_tree_root_hash}</label>
+          </Form.Field>
 
           <Form.Group inline>
             <label>Status</label>
@@ -105,6 +110,11 @@ class CompanyDashboard extends Component {
           <Form.Field inline>
             <label>Spammy: </label>
             <label>{item.is_spam == 1 ? "YES" : "NO"}</label>
+          </Form.Field>
+                    
+          <Form.Field inline>
+            <label>Hash: </label>
+            <label>{item.merkle_tree_root_hash}</label>
           </Form.Field>
                     
           <Form.Field inline>
@@ -181,7 +191,8 @@ class CompanyDashboard extends Component {
       review: "This is review",
       is_spam: 1,
       review_status: 0,
-      reply: ""
+      reply: "",
+      merkle_tree_root_hash: "sadfsdf",
     });
 
     curReviewData.push({
@@ -193,7 +204,8 @@ class CompanyDashboard extends Component {
       review: "This is review",
       is_spam: 1,
       review_status: 2,
-      reply: "This is reply"
+      reply: "This is reply",
+      merkle_tree_root_hash: "sadfsdf",
     });
     
     curReviewData.push({
@@ -205,7 +217,8 @@ class CompanyDashboard extends Component {
       review: "This is review",
       is_spam: 0,
       review_status: 1,
-      reply: "This is reply"
+      reply: "This is reply",
+      merkle_tree_root_hash: "sadfsdf",
     });
 
     this.setState({reviews: curReviewData});
