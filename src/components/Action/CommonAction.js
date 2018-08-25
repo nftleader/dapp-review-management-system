@@ -116,12 +116,13 @@ export function addReview(review_obj) {
                 authentication.deployed().then(function(instance) {
                     authenticationInstance = instance
                     let hash = getMerkleTreeRootHash(review_obj.review);
+                    review_obj.merkle_tree_root_hash = hash;
                     authenticationInstance.createReview(
                         review_obj.product_id,
                         review_obj.rating,
                         review_obj.review,
                         review_obj.is_spam,
-                        hash,
+                        review_obj.merkle_tree_root_hash,
                         {from: coinbase})
                     .then(function(result) {
                         dispatch(addReviewReducer(review_obj))
