@@ -311,6 +311,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   action: bindActionCreators(CommonAction, dispatch),
+  onaddProduct: (product_obj) => {
+    dispatch(CommonAction.addProduct(product_obj))
+  },
   onReplyReview: (review_obj) => {
     dispatch(CommonAction.replyReview(review_obj))
   },
