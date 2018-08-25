@@ -66,8 +66,9 @@ let getBlockchainData = async function(authentication, coinbase){
   let web3 = store.getState().web3.web3Instance;
 
   //my balance
-//  let userbalance = (await authentication.getUserBalance(user_id)).toNumber();
-
+  let curUserID = store.getState().user.data.id;
+  if(curUserID)
+    BlockchainObj.data.balance = (await authentication.getUserBalance(store.getState().user.data.id)).toNumber();
   //user list
   let allUserCount = (await authentication.totalCount.call()).toNumber();
   console.log("\n\nUser Count : ", allUserCount);
@@ -148,7 +149,7 @@ let getBlockchainData = async function(authentication, coinbase){
     }
     BlockchainObj.data.reviewData.push(obj);
   }
-
+  console.log("get from blockchain : ", BlockchainObj);
   return BlockchainObj; 
 }
 

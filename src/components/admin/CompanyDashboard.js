@@ -126,10 +126,11 @@ class CompanyDashboard extends Component {
       product_name: product_name
       */
 
-    var newProductId = this.props.data.blockchainData.productData.length + 1;
+    
+    var addProductId = this.props.data.blockchainData.productData.length + 1;
 
-    this.props.data.blockchainData.productData.push({
-      product_id: newProductId,
+    this.props.onaddProduct({
+      product_id: addProductId,
       company_id: this.props.company.id,
       product_name: this.state.curAddProductName
     });
@@ -231,6 +232,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   action: bindActionCreators(CommonAction, dispatch),
+  onaddProduct: (product_obj) => {
+    dispatch(CommonAction.addProduct(product_obj))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompanyDashboard)

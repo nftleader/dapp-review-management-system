@@ -9,7 +9,13 @@ const commonReducer = (state = initialState, action) => {
         return {...state, blockchainData: action.data};
     } else if (action.type === "SEARCH_REDUCER") {
         return {...state, searchKey: action.data};
-    } else {
+    } else if (action.type === "ADD_PRODUCT_REDUCER") {
+        let newstate = {...state};
+
+        newstate.blockchainData.productData.push(action.data);
+
+        return newstate;
+    }else {
         return state;
     }
 }

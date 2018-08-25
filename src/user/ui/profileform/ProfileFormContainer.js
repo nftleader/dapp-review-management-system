@@ -10,7 +10,9 @@ const mapStateToProps = (state, ownProps) => {
     user_second_name: state.user.data.user_second_name,
     user_zipcode: state.user.data.user_zipcode,
     company_name: state.user.data.company_name,
-    company_address: state.user.data.company_address
+    company_address: state.user.data.company_address,
+
+    balance: state.common.blockchainData.balance
   }
 }
 

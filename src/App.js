@@ -78,7 +78,7 @@ class App extends Component {
             <OnlyGuestLinks />
             <OnlyAuthLinks />
           </ul>
-          <Link to="/" className="pure-menu-heading pure-menu-link">Truffle Box</Link>
+          <Link to="/" className="pure-menu-heading pure-menu-link">Review Management System</Link>
 
           
         </nav>
