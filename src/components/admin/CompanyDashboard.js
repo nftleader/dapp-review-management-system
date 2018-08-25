@@ -79,7 +79,7 @@ class CompanyDashboard extends Component {
           
           <Grid>
             <Grid.Column width={16} textAlign='right' verticalAlign='middle'>
-              <Button primary onClick={() => {this.onClickPostBtn(index, item)}}>Post</Button>
+              <Button primary onClick={() => {this.onClickPostBtn(index, item)}} disabled={item.review_sel_status ? false : true}>Post</Button>
             </Grid.Column>
           </Grid>
         </Form>
@@ -117,7 +117,7 @@ class CompanyDashboard extends Component {
           {item.review_status == 2 ? 
           <Form.Field inline>
             <label>Reply: </label>
-            <p>{item.reply}</p>
+            <pre>{item.reply}</pre>
           </Form.Field> : ''}
         </Form>
       </List.Item>
