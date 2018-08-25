@@ -20,6 +20,11 @@ const rightStyle = {
   marginTop: 20
 };
 
+const activeStyle = {
+  background: "#ddd",
+  color: "#fff"
+}
+
 class CompanyDashboard extends Component {
   constructor(props) {
     super(props)
@@ -27,12 +32,14 @@ class CompanyDashboard extends Component {
 
     console.log(this.props);
 
-    this.state.curAddProductName = "";
+    this.state.curAddProductName = "";    //Name in product edit box
 
+    this.state.curSelectedProduct = {};
     this.state.reviews = [];
   }
 
-  showReviewItemEditable(item) {
+  showReviewItemEditable(index, item) {
+    console.log(item);
     return (
       <List.Item key={JSON.stringify(item)}>
         <Form>
@@ -57,27 +64,23 @@ class CompanyDashboard extends Component {
             <Form.Radio
               label='Positive'
               value='1'
-              checked={item.status === '1'}
-              onChange={() => {item.status = 1;}}
+              checked={item.review_sel_status === 1}
+              onChange={() => {this.onClickReviewStatus(index, item, 1)}}
             />
             <Form.Radio
               label='Negative'
-              value='-1'
-              checked={item.status === '-1'}
-              onChange={() => {item.status = 1;}}
+              value='2'
+              checked={item.review_sel_status === 2}
+              onChange={() => {this.onClickReviewStatus(index, item, 2)}}
             />
           </Form.Group>
 
-          <Form.TextArea label='Reply: ' placeholder='Write your reply...' />
+          {item.review_sel_status == 2 ?
+          <Form.TextArea label='Reply: ' placeholder='Write your reply...' /> : ''}
           
           <Grid>
-            <Grid.Column width={10}>
-              <ReCAPTCHA
-                sitekey="6LeSql0UAAAAAIpM4Z9GBPUtV_AOQcK9Vvrz838O"
-                onChange={(value) => {this.state.rateInfo.recaptcha = value}}/>
-            </Grid.Column>
-            <Grid.Column width={6} textAlign='right' verticalAlign='middle'>
-              <Button primary onClick={() => {this.onClickPostBtn(item)}}>Post</Button>
+            <Grid.Column width={16} textAlign='right' verticalAlign='middle'>
+              <Button primary onClick={() => {this.onClickPostBtn(index, item)}}>Post</Button>
             </Grid.Column>
           </Grid>
         </Form>
@@ -101,13 +104,13 @@ class CompanyDashboard extends Component {
                     
           <Form.Field inline>
             <label>Status: </label>
-            {item.status == 1 ? 
+            {item.review_status == 1 ? 
               <Label color='teal' horizontal>Positive</Label> : 
               <Label color='red' horizontal>Negative</Label>}
             
           </Form.Field>
           
-          {item.status == -1 ? 
+          {item.review_status == 2 ? 
           <Form.Field inline>
             <label>Reply: </label>
             <p>{item.reply}</p>
@@ -126,21 +129,20 @@ class CompanyDashboard extends Component {
       product_name: product_name
       */
 
-    
-    var addProductId = this.props.data.blockchainData.productData.length + 1;
-
+    var newProductId = this.props.data.blockchainData.productData.length + 1;
     this.props.onaddProduct({
-      product_id: addProductId,
+      product_id: newProductId,
       company_id: this.props.company.id,
       product_name: this.state.curAddProductName
     });
+    
 
     console.log(this.props.data.blockchainData);
 //    alert(this.state.curAddProductName);
     this.setState({curAddProductName: ""})
   }
 
-  onSelectProduct(value) {
+  onSelectProduct(selectedProduct) {
     /*
     let obj = {
       review_id: review_id.toNumber(),
@@ -157,19 +159,62 @@ class CompanyDashboard extends Component {
     var curReviewData = [];
     
     var company_id = this.props.company.id;
-    var product_id = 1;
 
     this.props.data.blockchainData.reviewData.map((value, index) => {
-      if (value.company_id != company_id || value.product_id != product_id) return;
+      if (value.company_id != company_id || value.product_id != selectedProduct.product_id) return;
 
       curReviewData.push(value);
     });
 
+    //Fake review data
+    curReviewData.push({
+      review_id: 1,
+      user_id: 1,
+      product_id: selectedProduct.product_id,
+      company_id: company_id,
+      rating: 4,
+      review: "This is review",
+      is_spam: 1,
+      review_status: 0,
+      reply: "This is reply"
+    });
+
+    curReviewData.push({
+      review_id: 2,
+      user_id: 2,
+      product_id: selectedProduct.product_id,
+      company_id: company_id,
+      rating: 4,
+      review: "This is review",
+      is_spam: 1,
+      review_status: 2,
+      reply: "This is reply"
+    });
+    
+    curReviewData.push({
+      review_id: 3,
+      user_id:3,
+      product_id: selectedProduct.product_id,
+      company_id: company_id,
+      rating: 5,
+      review: "This is review",
+      is_spam: 0,
+      review_status: 1,
+      reply: "This is reply"
+    });
+
     this.setState({reviews: curReviewData});
+    this.setState({curSelectedProduct: selectedProduct});
   }
 
-  onClickPostBtn(item) {
-    alert(JSON.stringify(item));
+  onClickReviewStatus(index, item, status) {
+    this.state.reviews [index].review_sel_status = status;
+    this.setState({reviews: this.state.reviews});
+  }
+
+  onClickPostBtn(index, item) {
+    this.state.reviews [index].review_status = this.state.reviews [index].review_sel_status;
+    this.setState({reviews: this.state.reviews});
   }
 
   render() {
@@ -183,7 +228,7 @@ class CompanyDashboard extends Component {
               <Segment style={leftListStyle}>
                 <List divided relaxed ordered size="big">
                   {this.props.data.blockchainData.productData.map((value, index) => 
-                    <List.Item as='a' key={index}>
+                    <List.Item as='a' key={index} style={value == this.state.curSelectedProduct ? activeStyle : {}}>
                       <List.Content>
                         <List.Header onClick={() => {this.onSelectProduct(value)}}>{value.product_name}</List.Header>
                       </List.Content>
@@ -208,8 +253,8 @@ class CompanyDashboard extends Component {
               <Segment>
                 <List divided relaxed ordered size="big">
                   {this.state.reviews.map((item, index) => {
-                    if (item.status == 0)
-                      return this.showReviewItemEditable(item);
+                    if (item.review_status == 0)
+                      return this.showReviewItemEditable(index, item);
                     else
                       return this.showReviewItem(item);
                   })}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router'
-import { HiddenOnlyAuth, VisibleOnlyAuth } from './util/wrappers.js'
+import { HiddenOnlyAuth, VisibleOnlyAuthForUser, VisibleOnlyAuthForCompany } from './util/wrappers.js'
 
 // UI Components
 import LoginButtonContainer from './user/ui/loginbutton/LoginButtonContainer'
@@ -14,7 +14,34 @@ import './App.css'
 
 class App extends Component {
   render() {
-    const OnlyAuthLinks = VisibleOnlyAuth(() =>
+    const OnlyAuthLinksForUser = VisibleOnlyAuthForUser(() =>
+      <span>
+        <li className="pure-menu-item">
+          <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
+        </li>
+        <li className="pure-menu-item">
+          <Link to="/profile" className="pure-menu-link">Profile</Link>
+        </li>
+
+        
+        
+        
+        <li className="pure-menu-item">
+          <Link to="/client_search" className="pure-menu-link">Client-Search</Link>
+        </li>
+        
+        <li className="pure-menu-item">
+            <Link to="/client_home" className="pure-menu-link">Client-Home</Link>
+        </li>
+        
+        <li className="pure-menu-item">
+            <Link to="/client_profile" className="pure-menu-link">Client-Profile</Link>
+        </li>
+
+        <LogoutButtonContainer />
+      </span>
+    )
+    const OnlyAuthLinksForCompany = VisibleOnlyAuthForCompany(() =>
       <span>
         <li className="pure-menu-item">
           <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
@@ -76,7 +103,8 @@ class App extends Component {
           <ul className="pure-menu-list navbar-right">
           
             <OnlyGuestLinks />
-            <OnlyAuthLinks />
+            <OnlyAuthLinksForUser />
+            <OnlyAuthLinksForCompany />
           </ul>
           <Link to="/" className="pure-menu-heading pure-menu-link">Review Management System</Link>
 

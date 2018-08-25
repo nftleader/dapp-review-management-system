@@ -21,10 +21,17 @@ export const UserIsNotAuthenticated = UserAuthWrapper({
 
 // UI Component Wrappers
 
-export const VisibleOnlyAuth = UserAuthWrapper({
+export const VisibleOnlyAuthForUser = UserAuthWrapper({
   authSelector: state => state.user,
   wrapperDisplayName: 'VisibleOnlyAuth',
-  predicate: user => user.data,
+  predicate: user => user.data && user.data.user_type === 0,
+  FailureComponent: null
+})
+
+export const VisibleOnlyAuthForCompany = UserAuthWrapper({
+  authSelector: state => state.user,
+  wrapperDisplayName: 'VisibleOnlyAuth',
+  predicate: user => user.data && user.data.user_type === 1,
   FailureComponent: null
 })
 
