@@ -6,8 +6,6 @@ import { connect } from 'react-redux'
 class CompanyProfile extends Component {
   constructor(props) {
     super(props)
-
-    console.log(this.props.company);
   }
 
   render() {

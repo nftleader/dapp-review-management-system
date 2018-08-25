@@ -1,16 +1,11 @@
 import React, { Component } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 
+import { connect } from 'react-redux'
 class ClientProfile extends Component {
   constructor(props) {
     super(props)
-    this.state = {};
-    this.state.userInfo = {
-      fullName: "Smolina Alek....",
-      email: "alphanove!!!!!!!!!!",
-      zipCode: "123123124",
-      balance: "1232343"
-    }
+    console.log(this.props.user);
   }
 
   render() {
@@ -19,16 +14,13 @@ class ClientProfile extends Component {
         <div className="row">
           <div className="col-md-12">
             <Header as='h3' textAlign='center'>
-              Full Name: {this.state.userInfo.fullName}
+              Full Name: {this.props.user.user_first_name} {this.props.user.user_second_name}
             </Header>
             <Header as='h3' textAlign='center'>
-              Email: {this.state.userInfo.email}
+              Email: {this.props.user.email}
             </Header>
             <Header as='h3' textAlign='center'>
-              ZipCode: {this.state.userInfo.zipCode}
-            </Header>
-            <Header as='h3' textAlign='center'>
-              Balance: {this.state.userInfo.balance}
+              ZipCode: {this.props.user.user_zipcode}
             </Header>
           </div>
         </div>
@@ -37,4 +29,10 @@ class ClientProfile extends Component {
   }
 }
 
-export default ClientProfile
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user.data
+  }
+}
+
+export default connect(mapStateToProps)(ClientProfile)

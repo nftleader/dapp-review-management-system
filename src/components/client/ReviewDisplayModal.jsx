@@ -15,23 +15,19 @@ class ReviewDisplayModal extends React.Component {
         super(props);
 
         this.state = {};
-
-        this.state.ratings = [];
-
-        var reviews = [];
-
-        this.props.data.blockchainData.reviewData.map((value, index) => {
-          if (value.product_id != this.props.info.product_id) return;
-    
-          reviews.push(value);
-        });
-
-        this.state.reviews = reviews;
     }
 
     render() {
         if (this.props.info == null)
             return (<div></div>);
+
+        var reviews = [];
+
+        this.props.data.blockchainData.reviewData.map((value, index) => {
+            if (value.product_id != this.props.info.product_id) return;
+    
+            reviews.push(value);
+        });
 
         return (
             <Modal className="reviewdisplaymodal" open={this.props.isOpenDialog} centered={false} onClose={() => {this.props.onCloseDialog()}}>
@@ -48,7 +44,10 @@ class ReviewDisplayModal extends React.Component {
                         <Header>Ratings</Header>
                         <Form>
                             <List divided style={scrollStyle}>
-                                {this.state.ratings.map((item, index) => {
+                                {reviews.map((item, index) => {
+                                    if (item.review_status == 0) {
+                                        return '';
+                                    }
                                     return (
                                     <List.Item key={index}>
                                         <Form.Field inline>
