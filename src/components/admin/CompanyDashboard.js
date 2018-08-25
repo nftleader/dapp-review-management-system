@@ -182,7 +182,7 @@ class CompanyDashboard extends Component {
     });
 
     //Fake review data
-    curReviewData.push({
+/*    curReviewData.push({
       review_id: 1,
       user_id: 1,
       product_id: selectedProduct.product_id,
@@ -220,7 +220,7 @@ class CompanyDashboard extends Component {
       reply: "This is reply",
       merkle_tree_root_hash: "sadfsdf",
     });
-
+*/
     this.setState({reviews: curReviewData});
     this.setState({curSelectedProduct: selectedProduct});
   }
