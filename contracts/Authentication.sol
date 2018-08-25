@@ -44,6 +44,7 @@ contract Authentication is Killable {
     bool is_spam;
     ReviewStatus review_status;
     string reply;
+    bytes32 merkle_tree_root_hash;
   }
 
   //users
@@ -218,7 +219,7 @@ contract Authentication is Killable {
   }
 
 
-  function createReview(uint _prod_id, uint _rating, string _review, bool _isSpam)
+  function createReview(uint _prod_id, uint _rating, string _review, bool _isSpam, bytes32 _hash)
   payable public
   onlyUser onlyExistingProductID(_prod_id) validRating(_rating)
   returns(uint){
@@ -231,13 +232,14 @@ contract Authentication is Killable {
     reviews[reviewCount].review = (_review);
     reviews[reviewCount].is_spam = _isSpam;
     reviews[reviewCount].review_status = ReviewStatus.Pending;
+    reviews[reviewCount].merkle_tree_root_hash = _hash;
     return reviewCount;
   }
 
   function getReview(uint _review_id)
   constant public
   onlyExistingReviewID(_review_id)
-  returns(uint, uint, uint, uint, uint, string, bool, ReviewStatus, string){
+  returns(uint, uint, uint, uint, uint, string, bool, ReviewStatus, string, bytes32){
     Review memory review = reviews[_review_id];
     return (
       review.id,
@@ -248,7 +250,8 @@ contract Authentication is Killable {
       review.review,
       review.is_spam,
       review.review_status,
-      review.reply
+      review.reply,
+      review.merkle_tree_root_hash
     );
   }
 

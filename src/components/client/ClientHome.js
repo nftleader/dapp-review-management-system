@@ -91,7 +91,7 @@ class ClientHome extends Component {
 
               <Table.Body>
               {this.state.products.map((item, index) => {
-                return ( <Table.Row key={item.product_id} active={item == this.state.curSelItem ? 1 : 0}>
+                return ( <Table.Row key={item.product_id} active={item == this.state.curSelItem ? true : false}>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{index + 1}</Table.Cell>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{item.product_name}</Table.Cell>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{item.company.company_name}</Table.Cell>
