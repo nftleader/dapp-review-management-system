@@ -17,25 +17,15 @@ class App extends Component {
     const OnlyAuthLinksForUser = VisibleOnlyAuthForUser(() =>
       <span>
         <li className="pure-menu-item">
-          <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
-        </li>
-        <li className="pure-menu-item">
-          <Link to="/profile" className="pure-menu-link">Profile</Link>
-        </li>
-
-        
-        
-        
-        <li className="pure-menu-item">
-          <Link to="/client_search" className="pure-menu-link">Client-Search</Link>
+          <Link to="/client_search" className="pure-menu-link">Search</Link>
         </li>
         
         <li className="pure-menu-item">
-            <Link to="/client_home" className="pure-menu-link">Client-Home</Link>
+            <Link to="/client_home" className="pure-menu-link">Home</Link>
         </li>
         
         <li className="pure-menu-item">
-            <Link to="/client_profile" className="pure-menu-link">Client-Profile</Link>
+            <Link to="/client_profile" className="pure-menu-link">Profile</Link>
         </li>
 
         <LogoutButtonContainer />
@@ -53,11 +43,11 @@ class App extends Component {
     const OnlyAuthLinksForCompany = VisibleOnlyAuthForCompany(() =>
       <span>        
         <li className="pure-menu-item">
-            <Link to="/company_dashboard" className="pure-menu-link">Company-Dashboard</Link>
+            <Link to="/company_dashboard" className="pure-menu-link">Dashboard</Link>
         </li>
         
         <li className="pure-menu-item">
-            <Link to="/company_profile" className="pure-menu-link">Company-Profile</Link>
+            <Link to="/company_profile" className="pure-menu-link">Profile</Link>
         </li>
         
         <LogoutButtonContainer />

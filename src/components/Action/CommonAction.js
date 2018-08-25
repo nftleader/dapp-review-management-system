@@ -122,12 +122,44 @@ export function replyReview(review_obj) {
                 }
                 authentication.deployed().then(function(instance) {
                     authenticationInstance = instance
-                    authenticationInstance.replyReview(review_obj.id, review_obj.reply, {from: coinbase})
+                    authenticationInstance.replyReview(review_obj.review_id, review_obj.reply, {from: coinbase})
                     .then(function(result) {
                         dispatch(replyReviewReducer(review_obj))
                     })
                     .catch(function(result) {
                         console.log("error in 'replyReview': ", result);
+                    // If error...
+                    })
+                })
+            })
+        }
+    } else {
+        console.error('Web3 is not initialized.');
+    }
+};
+
+
+export function approveReview(review_obj) {
+    let web3 = store.getState().web3.web3Instance
+    if (typeof web3 !== 'undefined') {
+
+        return function(dispatch) {
+            const authentication = contract(AuthenticationContract)
+            authentication.setProvider(web3.currentProvider)
+            var authenticationInstance
+            web3.eth.getCoinbase((error, coinbase) => {
+                // Log errors, if any.
+                if (error) {
+                    console.error(error);
+                }
+                authentication.deployed().then(function(instance) {
+                    authenticationInstance = instance
+                    authenticationInstance.approveReview(review_obj.review_id, {from: coinbase})
+                    .then(function(result) {
+                        dispatch(approveReducer(review_obj))
+                    })
+                    .catch(function(result) {
+                        console.log("error in 'approve Review': ", result);
                     // If error...
                     })
                 })

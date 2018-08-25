@@ -25,7 +25,7 @@ const commonReducer = (state = initialState, action) => {
     else if (action.type === "REPLY_REDUCER") {
         let newstate = {...state};
         if(newstate.blockchainData.reviewData[action.data.id]){
-            newstate.blockchainData.reviewData[action.data.id].review_status = 0;   //negative
+            newstate.blockchainData.reviewData[action.data.id].review_status = 2;   //negative
             newstate.blockchainData.reviewData[action.data.id].reply = action.data.reply;
         }
         return newstate;

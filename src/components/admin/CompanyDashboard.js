@@ -221,8 +221,14 @@ class CompanyDashboard extends Component {
   }
 
   onClickPostBtn(index, item) {
+    
     this.state.reviews [index].review_status = this.state.reviews [index].review_sel_status;
     this.setState({reviews: this.state.reviews});
+    
+    if(item.review_status == 2)
+      this.props.onReplyReview(item);
+    if(item.review_status == 1)
+      this.props.onApproveReview(item);
     /////////////////////////////////
     /////////////////////////////////
   }
@@ -287,8 +293,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   action: bindActionCreators(CommonAction, dispatch),
-  onaddProduct: (product_obj) => {
-    dispatch(CommonAction.addProduct(product_obj))
+  onReplyReview: (review_obj) => {
+    dispatch(CommonAction.replyReview(review_obj))
+  },
+  onApproveReview: (review_obj) => {
+    dispatch(CommonAction.approveReview(review_obj))
   }
 })
 

@@ -22,6 +22,9 @@ class ClientProfile extends Component {
             <Header as='h3' textAlign='center'>
               ZipCode: {this.props.user.user_zipcode}
             </Header>
+            <Header as='h3' textAlign='center'>
+            Token Balance: {this.props.balance} RMST
+            </Header>
           </div>
         </div>
       </main>
@@ -31,7 +34,8 @@ class ClientProfile extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user.data
+    user: state.user.data,
+    balance: state.common.blockchainData.balance
   }
 }
 

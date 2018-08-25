@@ -212,7 +212,11 @@ export function loginUser() {
               return browserHistory.push(decodeURIComponent(currentLocation.query.redirect))
             }
 
-            return browserHistory.push('/dashboard')
+            if( obj.user_type == 0 ){ //user
+              return browserHistory.push('/client_profile')
+            }else{
+              return browserHistory.push('/company_profile')
+            }
           })
           .catch(function(result) {
             // If error, go to signup page.
