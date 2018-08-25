@@ -56,12 +56,13 @@ class ReviewDisplayModal extends React.Component {
                                         </Form.Field>
                                         <Form.Field inline>
                                             <Label>Review: </Label>
-                                            <p>{item.review}</p>
+                                            <pre>{item.review}</pre>
                                         </Form.Field>
+                                        {item.review_status == 2 ?
                                         <Form.Field inline>
                                             <Label>Reply: </Label>
-                                            <p>{item.reply}</p>
-                                        </Form.Field>
+                                            <pre>{item.reply}</pre>
+                                        </Form.Field> : ''}
                                     </List.Item>
                                 );
                                 })}

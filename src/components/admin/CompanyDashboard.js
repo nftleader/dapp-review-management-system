@@ -79,7 +79,8 @@ class CompanyDashboard extends Component {
           
           <Grid>
             <Grid.Column width={16} textAlign='right' verticalAlign='middle'>
-              <Button primary onClick={() => {this.onClickPostBtn(index, item)}} disabled={item.review_sel_status ? false : true}>Post</Button>
+              <Button primary onClick={() => {this.onClickPostBtn(index, item)}} 
+                  disabled={item.review_sel_status ? false : true}>Post</Button>
             </Grid.Column>
           </Grid>
         </Form>
@@ -180,7 +181,7 @@ class CompanyDashboard extends Component {
       review: "This is review",
       is_spam: 1,
       review_status: 0,
-      reply: "This is reply"
+      reply: ""
     });
 
     curReviewData.push({
@@ -221,16 +222,20 @@ class CompanyDashboard extends Component {
   }
 
   onClickPostBtn(index, item) {
+//    this.state.reviews [index].review_status = this.state.reviews [index].review_sel_status;
+//    this.setState({reviews: this.state.reviews});
     
-    this.state.reviews [index].review_status = this.state.reviews [index].review_sel_status;
-    this.setState({reviews: this.state.reviews});
+    var reviewStatus = this.state.reviews [index].review_sel_status;
     
-    if(item.review_status == 2)
+    if (reviewStatus == 2 && this.state.reviews [index].reply == "") {
+      alert("Input reply");
+      return;
+    }
+
+    if(item.reviewStatus == 2)
       this.props.onReplyReview(item);
-    if(item.review_status == 1)
+    if(item.reviewStatus == 1)
       this.props.onApproveReview(item);
-    /////////////////////////////////
-    /////////////////////////////////
   }
 
   render() {
