@@ -2,6 +2,10 @@ import React from 'react'
 import { Button, Header, Modal, List, Rating, Form, Label } from 'semantic-ui-react'
 import ReCAPTCHA from "react-google-recaptcha";
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as CommonAction from 'components/Action/CommonAction'
+
 class WriteReviewModal extends React.Component {
     constructor(props) {
         super(props);
@@ -16,7 +20,18 @@ class WriteReviewModal extends React.Component {
     }
 
     onPostReview() {
-        alert(JSON.stringify(this.state.rateInfo));
+        var reviewObj = {
+            review_id: this.props.data.blockchainData.reviewData.length + 1,
+            user_id: this.props.user.id,
+            product_id: this.props.info.product_id,
+            company_id: this.props.info.company.id,
+            rating: this.state.rateInfo.rating,
+            review: this.state.rateInfo.review,
+            is_spam: this.state.rateInfo.recaptcha == "" ? 1 : 0,
+            review_status: 0,
+            reply: ""
+        }
+        alert(JSON.stringify(reviewObj));
     }
 
     render() {
@@ -29,9 +44,9 @@ class WriteReviewModal extends React.Component {
                 <Modal.Content>
                     <Modal.Description>
                         <Header>Product Info</Header>
-                        <p as='h5'>Product Name: {this.props.info.product}</p>
-                        <p as='h5'>Company Name: {this.props.info.company}</p>
-                        <p as='h5'>Company Address: {this.props.info.address}</p>
+                        <p as='h5'>Product Name: {this.props.info.product_name}</p>
+                        <p as='h5'>Company Name: {this.props.info.company.company_name}</p>
+                        <p as='h5'>Company Address: {this.props.info.company.company_address}</p>
 
                         <hr></hr>
 
@@ -57,4 +72,13 @@ class WriteReviewModal extends React.Component {
     }
 }
 
-export default WriteReviewModal;
+const mapStatetoProps = state => ({
+  data: state.common,
+  user: state.user.data
+})
+
+const mapDispatchToProps = dispatch => ({
+  action: bindActionCreators(CommonAction, dispatch),
+})
+
+export default connect(mapStatetoProps, mapDispatchToProps)(WriteReviewModal)

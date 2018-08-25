@@ -14,25 +14,12 @@ class ClientHome extends Component {
 
     this.state = {};
 
-
     this.state.searchKey = "";
     if (this.props.data.searchKey.searchKey != undefined)
       this.state.searchKey = this.props.data.searchKey.searchKey;
 
-    this.state.datas = [{
-      product: 'aaa',
-      company: 'email1.e.com',
-      address: 'address231'
-    },{
-      product: 'aaa123',
-      company: '12email1.e.com',
-      address: 'addres54s1'
-    },{
-      product: '54',
-      company: '432email1.e.com',
-      address: 'address871'
-    },];
-
+    this.processSearch();
+    
     this.state.isOpenReviewDisplayModal = false;
     this.state.isOpenWriteReviewModal = false;
     this.state.curSelItem = null;
@@ -40,6 +27,32 @@ class ClientHome extends Component {
 
   onClickSearch() {
     this.props.action.searchAction(this.state.searchKey);
+
+    this.processSearch();
+
+    this.setState({products: this.state.products});
+  }
+
+  processSearch() {
+    var products = Array.from(this.props.data.blockchainData.productData);
+
+    var companies = {};
+    this.props.data.blockchainData.companyData.map((value, index) => {
+      companies [value.id] = value;
+    })
+
+    for (var index = 0; index < products.length; ) {
+      if (products [index].product_name.indexOf(this.state.searchKey) == -1) {
+        //Delete item;
+        products.splice(index, 1);
+        continue;
+      }
+
+      products [index].company = companies [products [index].company_id];
+      index ++;
+    }
+
+    this.state.products = products;
   }
 
   onClickItem(item) {
@@ -77,12 +90,12 @@ class ClientHome extends Component {
               </Table.Header>
 
               <Table.Body>
-              {this.state.datas.map((item, index) => {
-                return ( <Table.Row key={item.product}>
+              {this.state.products.map((item, index) => {
+                return ( <Table.Row key={item.product_id}>
                           <Table.Cell onClick={() => this.onClickItem(item)}>{index + 1}</Table.Cell>
-                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.product}</Table.Cell>
-                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.company}</Table.Cell>
-                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.address}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.product_name}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.company.company_name}</Table.Cell>
+                          <Table.Cell onClick={() => this.onClickItem(item)}>{item.company.company_address}</Table.Cell>
                           <Table.Cell>
                             <Button positive onClick={() => {this.onClickWriteReview(item)}}>Write review</Button>
                           </Table.Cell>

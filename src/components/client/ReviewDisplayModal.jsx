@@ -1,6 +1,11 @@
 import React from 'react'
 import { Button, Header, Modal, List, Rating, Form, Label } from 'semantic-ui-react'
 
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import * as CommonAction from 'components/Action/CommonAction'
+
+
 const scrollStyle = {
     maxHeight: 300,
     overflowY: 'scroll'
@@ -11,31 +16,17 @@ class ReviewDisplayModal extends React.Component {
 
         this.state = {};
 
-        this.state.ratings = [{
-            rating: 4,
-            review: "This project is awesome",
-            reply: "This is reply"
-        },{
-            rating: 4,
-            review: "This project is awesome",
-            reply: "This is reply"
-        },{
-            rating: 4,
-            review: "This project is awesome",
-            reply: "This is reply"
-        },{
-            rating: 4,
-            review: "This project is awesome",
-            reply: "This is reply"
-        },{
-            rating: 4,
-            review: "This project is awesome",
-            reply: "This is reply"
-        },{
-            rating: 4,
-            review: "This project is awesome",
-            reply: "This is reply"
-        }];
+        this.state.ratings = [];
+
+        var reviews = [];
+
+        this.props.data.blockchainData.reviewData.map((value, index) => {
+          if (value.product_id != this.props.info.product_id) return;
+    
+          reviews.push(value);
+        });
+
+        this.state.reviews = reviews;
     }
 
     render() {
@@ -48,9 +39,9 @@ class ReviewDisplayModal extends React.Component {
                 <Modal.Content>
                     <Modal.Description>
                         <Header>Product Info</Header>
-                        <p as='h5'>Product Name: {this.props.info.product}</p>
-                        <p as='h5'>Company Name: {this.props.info.company}</p>
-                        <p as='h5'>Company Address: {this.props.info.address}</p>
+                        <p as='h5'>Product Name: {this.props.info.product_name}</p>
+                        <p as='h5'>Company Name: {this.props.info.company.company_name}</p>
+                        <p as='h5'>Company Address: {this.props.info.company.company_address}</p>
 
                         <hr></hr>
 
@@ -88,4 +79,13 @@ class ReviewDisplayModal extends React.Component {
     }
 }
 
-export default ReviewDisplayModal;
+const mapStatetoProps = state => ({
+  data: state.common,
+  user: state.user.data
+})
+
+const mapDispatchToProps = dispatch => ({
+  action: bindActionCreators(CommonAction, dispatch),
+})
+
+export default connect(mapStatetoProps, mapDispatchToProps)(ReviewDisplayModal)

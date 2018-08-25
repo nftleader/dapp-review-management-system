@@ -53,11 +53,11 @@ class App extends Component {
     const OnlyAuthLinksForCompany = VisibleOnlyAuthForCompany(() =>
       <span>        
         <li className="pure-menu-item">
-            <Link to="/dashboard" className="pure-menu-link">Company-Dashboard</Link>
+            <Link to="/company_dashboard" className="pure-menu-link">Company-Dashboard</Link>
         </li>
         
         <li className="pure-menu-item">
-            <Link to="/profile" className="pure-menu-link">Company-Profile</Link>
+            <Link to="/company_profile" className="pure-menu-link">Company-Profile</Link>
         </li>
         
         <LogoutButtonContainer />

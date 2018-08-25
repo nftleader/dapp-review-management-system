@@ -47,8 +47,8 @@ ReactDOM.render((
           <Route path="client_home" component={UserIsAuthenticated(ClientHome)} />
           <Route path="client_profile" component={UserIsAuthenticated(ClientProfile)} />
           
-          <Route path="dashboard" component={UserIsAuthenticated(CompanyDashboard)} />
-          <Route path="profile" component={UserIsAuthenticated(CompanyProfile)} />
+          <Route path="company_dashboard" component={UserIsAuthenticated(CompanyDashboard)} />
+          <Route path="company_profile" component={UserIsAuthenticated(CompanyProfile)} />
 
 
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
