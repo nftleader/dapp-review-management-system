@@ -245,9 +245,9 @@ class CompanyDashboard extends Component {
       return;
     }
 
-    if(item.reviewStatus == 2)
+    if(reviewStatus == 2)
       this.props.onReplyReview(item);
-    if(item.reviewStatus == 1)
+    if(reviewStatus == 1)
       this.props.onApproveReview(item);
   }
 
