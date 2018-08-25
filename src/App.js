@@ -41,24 +41,23 @@ class App extends Component {
         <LogoutButtonContainer />
       </span>
     )
-    const OnlyAuthLinksForCompany = VisibleOnlyAuthForCompany(() =>
-      <span>
-        <li className="pure-menu-item">
+
+    /*<li className="pure-menu-item">
           <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
         </li>
         <li className="pure-menu-item">
           <Link to="/profile" className="pure-menu-link">Profile</Link>
         </li>
 
-        
-        
-        
+        */
+    const OnlyAuthLinksForCompany = VisibleOnlyAuthForCompany(() =>
+      <span>        
         <li className="pure-menu-item">
-            <Link to="/company_dashboard" className="pure-menu-link">Company-Dashboard</Link>
+            <Link to="/dashboard" className="pure-menu-link">Company-Dashboard</Link>
         </li>
         
         <li className="pure-menu-item">
-            <Link to="/company_profile" className="pure-menu-link">Company-Profile</Link>
+            <Link to="/profile" className="pure-menu-link">Company-Profile</Link>
         </li>
         
         <LogoutButtonContainer />
@@ -67,28 +66,6 @@ class App extends Component {
 
     const OnlyGuestLinks = HiddenOnlyAuth(() =>
       <span>
-        
-        <li className="pure-menu-item">
-          <Link to="/client_search" className="pure-menu-link">Client-Search</Link>
-        </li>
-        
-        <li className="pure-menu-item">
-            <Link to="/client_home" className="pure-menu-link">Client-Home</Link>
-        </li>
-        
-        <li className="pure-menu-item">
-            <Link to="/client_profile" className="pure-menu-link">Client-Profile</Link>
-        </li>
-
-        
-        
-        <li className="pure-menu-item">
-            <Link to="/company_dashboard" className="pure-menu-link">Company-Dashboard</Link>
-        </li>
-        
-        <li className="pure-menu-item">
-            <Link to="/company_profile" className="pure-menu-link">Company-Profile</Link>
-        </li>
         
         <li className="pure-menu-item">
           <Link to="/signup" className="pure-menu-link">Sign Up</Link>

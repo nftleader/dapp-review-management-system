@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Header, Segment, Grid, List, Input, Form, Label, Rating, Button } from 'semantic-ui-react'
-import ReCAPTCHA from "react-google-recaptcha";
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'

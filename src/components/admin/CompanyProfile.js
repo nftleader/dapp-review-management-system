@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 
+import { connect } from 'react-redux'
+
 class CompanyProfile extends Component {
   constructor(props) {
     super(props)
-    this.state = {};
-    this.state.companyInfo = {
-      company: "Smolina Alek....",
-      email: "alphanove!!!!!!!!!!",
-      address: "123123124"
-    }
+
+    console.log(this.props.company);
   }
 
   render() {
@@ -18,13 +16,13 @@ class CompanyProfile extends Component {
         <div className="row">
           <div className="col-md-12">
             <Header as='h3' textAlign='center'>
-              Company Name: {this.state.companyInfo.company}
+              Company Name: {this.props.company.company_name}
             </Header>
             <Header as='h3' textAlign='center'>
-              Email: {this.state.companyInfo.email}
+              Email: {this.props.company.email}
             </Header>
             <Header as='h3' textAlign='center'>
-              Address: {this.state.companyInfo.address}
+              Address: {this.props.company.company_address}
             </Header>
           </div>
         </div>
@@ -33,4 +31,10 @@ class CompanyProfile extends Component {
   }
 }
 
-export default CompanyProfile
+const mapStateToProps = (state, ownProps) => {
+  return {
+    company: state.user.data
+  }
+}
+
+export default connect(mapStateToProps)(CompanyProfile)

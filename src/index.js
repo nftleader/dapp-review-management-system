@@ -43,12 +43,12 @@ ReactDOM.render((
         <Route path="/" component={App}>
           <IndexRoute component={Home} />
           
-          <Route path="client_search" component={ClientSearch} />
-          <Route path="client_home" component={ClientHome} />
-          <Route path="client_profile" component={ClientProfile} />
+          <Route path="client_search" component={UserIsAuthenticated(ClientSearch)} />
+          <Route path="client_home" component={UserIsAuthenticated(ClientHome)} />
+          <Route path="client_profile" component={UserIsAuthenticated(ClientProfile)} />
           
-          <Route path="company_dashboard" component={CompanyDashboard} />
-          <Route path="company_profile" component={CompanyProfile} />
+          <Route path="dashboard" component={UserIsAuthenticated(CompanyDashboard)} />
+          <Route path="profile" component={UserIsAuthenticated(CompanyProfile)} />
 
 
           <Route path="dashboard" component={UserIsAuthenticated(Dashboard)} />
