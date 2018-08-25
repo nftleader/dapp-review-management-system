@@ -32,6 +32,7 @@ class WriteReviewModal extends React.Component {
             reply: ""
         }
         alert(JSON.stringify(reviewObj));
+        this.props.onAddReview(reviewObj);
     }
 
     render() {
@@ -79,6 +80,9 @@ const mapStatetoProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   action: bindActionCreators(CommonAction, dispatch),
+  onAddReview: (review_obj) => {
+    dispatch(CommonAction.addReview(review_obj))
+  }
 })
 
 export default connect(mapStatetoProps, mapDispatchToProps)(WriteReviewModal)
