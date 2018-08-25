@@ -45,9 +45,9 @@ class ReviewDisplayModal extends React.Component {
                         <Form>
                             <List divided style={scrollStyle}>
                                 {reviews.map((item, index) => {
-                                    if (item.review_status == 0) {
+                                    /*if (item.review_status == 0) {
                                         return '';
-                                    }
+                                    }*/
                                     return (
                                     <List.Item key={index}>
                                         <Form.Field inline>
