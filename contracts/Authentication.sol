@@ -1,4 +1,4 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.5.0;
 
 import './zeppelin/lifecycle/Killable.sol';
 import "./RMSToken.sol";
@@ -68,7 +68,7 @@ contract Authentication is Killable {
   modifier onlyExistingUser() { require(users[msg.sender].id > 0, "User is not registered"); _; }
   modifier onlyNONExistingUser() { require(users[msg.sender].id == 0, "User is already registered"); _; }
 
-  modifier onlyExistingUserID(uint userid) { require(usersById[userid] != 0x0, "User ID is not registered"); _; }
+  modifier onlyExistingUserID(uint userid) { require(usersById[userid] != address(0), "User ID is not registered"); _; }
   modifier onlyExistingProductID(uint prodid) { require(products[prodid].id > 0, "Product ID is not registered"); _; }
   modifier onlyExistingReviewID(uint revid) { require(reviews[revid].id > 0, "Review ID is not registered"); _; }
 
@@ -98,7 +98,7 @@ contract Authentication is Killable {
 
   function login()
   public view onlyExistingUser
-  returns (uint, UserType, string, string, string, string,  string, string) {
+  returns (uint, UserType, string memory, string memory, string memory, string memory,  string memory, string memory) {
     // emit LogString("-------  Login");
     // emit LogNumber(users[msg.sender].id);
     // emit LogString(users[msg.sender].email);
@@ -118,8 +118,8 @@ contract Authentication is Killable {
   }
 
   function getUser(uint index)
-  public constant onlyExistingUserID(index)
-  returns (uint, UserType, string, string, string, string,  string, string) {
+  public view onlyExistingUserID(index)
+  returns (uint, UserType, string memory, string memory, string memory, string memory,  string memory, string memory) {
     User memory user = users[usersById[index]];
     return (user.id, 
             user.userType,
@@ -145,10 +145,10 @@ contract Authentication is Killable {
   }
 
   function signupUser(
-    string _email,
-    string _user_first_name,
-    string _user_second_name,
-    string _user_zipcode
+    string calldata _email,
+    string calldata _user_first_name,
+    string calldata _user_second_name,
+    string calldata _user_zipcode
   )
   onlyNONExistingUser
   external  payable  returns (uint) {
@@ -174,9 +174,9 @@ contract Authentication is Killable {
 
 
   function signupCompany(
-    string _email,
-    string _company_name,
-    string _company_address
+    string calldata _email,
+    string calldata _company_name,
+    string calldata _company_address
   )
   onlyNONExistingUser
   external  payable  returns (uint) {
@@ -197,7 +197,7 @@ contract Authentication is Killable {
     return totalCount; //return userid
   }
 
-  function createProduct(string _product_name)
+  function createProduct(string memory _product_name)
   payable public onlyCompany
   returns(uint){
     productCount++;
@@ -209,8 +209,8 @@ contract Authentication is Killable {
   
 
   function getProduct(uint index)
-  constant public onlyExistingProductID(index)
-  returns(uint, uint, string){
+  view public onlyExistingProductID(index)
+  returns(uint, uint, string memory){
     return(
       products[index].id,
       products[index].company_id,
@@ -219,7 +219,7 @@ contract Authentication is Killable {
   }
 
 
-  function createReview(uint _prod_id, uint _rating, string _review, bool _isSpam, bytes32 _hash)
+  function createReview(uint _prod_id, uint _rating, string memory _review, bool _isSpam, bytes32 _hash)
   payable public
   onlyUser onlyExistingProductID(_prod_id) validRating(_rating)
   returns(uint){
@@ -237,9 +237,9 @@ contract Authentication is Killable {
   }
 
   function getReview(uint _review_id)
-  constant public
+  view public
   onlyExistingReviewID(_review_id)
-  returns(uint, uint, uint, uint, uint, string, bool, ReviewStatus, string, bytes32){
+  returns(uint, uint, uint, uint, uint, string memory, bool, ReviewStatus, string memory, bytes32){
     Review memory review = reviews[_review_id];
     return (
       review.id,
@@ -255,7 +255,7 @@ contract Authentication is Killable {
     );
   }
 
-  function replyReview(uint _review_id, string _reply)
+  function replyReview(uint _review_id, string memory _reply)
   payable public
   onlyCompany onlyExistingReviewID(_review_id) onlyMyReview(_review_id) onlyPendingReview(_review_id)
   returns(uint){
@@ -278,18 +278,18 @@ contract Authentication is Killable {
   }
 
   function getUserBalance(uint _user_id)
-  constant public
+  view public
   returns (uint){
     return rmstoken.balanceOf(usersById[_user_id]);
   }
 
 /*
-  function update(string user_first_name)
+  function update(string memory user_first_name)
   public
   payable
   onlyValidName(user_first_name)
   onlyExistingUser
-  returns (string) {
+  returns (string memory) {
     // Update user name.
 
     if (users[msg.sender].user_first_name != 0x0)
